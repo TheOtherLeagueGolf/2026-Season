@@ -1,6 +1,6 @@
 {
-  "name": "The Other League",
-  "short_name": "TOL",
+  "name": "The Other League - 2026",
+  "short_name": "TOL 2026",
   "description": "Weekly golf league hub — standings, score entry, and skins.",
   "start_url": ".",
   "display": "standalone",
@@ -21,6 +21,5 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
   "categories": ["sports", "lifestyle"]
 }
