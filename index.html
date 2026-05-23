@@ -225,23 +225,11 @@
 (function () {
   'use strict';
 
+  /* ── OWNER SETUP: paste your GAS deployment URL here, then commit to GitHub ──
+     Once set, all golfers are redirected automatically — no prompt shown.       */
+  var HARDCODED_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
+
   var STORAGE_KEY = 'tol_gas_url';
-
-  var setupView   = document.getElementById('setupView');
-  var savedView   = document.getElementById('savedView');
-  var gasUrlInput = document.getElementById('gasUrl');
-  var goBtn       = document.getElementById('goBtn');
-  var openBtn     = document.getElementById('openBtn');
-  var changeBtn   = document.getElementById('changeBtn');
-  var clearBtn    = document.getElementById('clearBtn');
-  var statusMsg   = document.getElementById('statusMsg');
-  var savedStatus = document.getElementById('savedStatusMsg');
-  var savedUrlEl  = document.getElementById('savedUrlDisplay');
-
-  /* ── Service Worker ── */
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').catch(function () {});
-  }
 
   /* ── URL validation ── */
   function isValidGasUrl(url) {
@@ -253,6 +241,28 @@
       return false;
     }
   }
+
+  /* ── Service Worker ── */
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js').catch(function () {});
+  }
+
+  /* Auto-redirect if owner has hardcoded the URL */
+  if (HARDCODED_URL && isValidGasUrl(HARDCODED_URL)) {
+    window.location.replace(HARDCODED_URL);
+    /* Stop here — nothing else needs to run */
+  }
+
+  var setupView   = document.getElementById('setupView');
+  var savedView   = document.getElementById('savedView');
+  var gasUrlInput = document.getElementById('gasUrl');
+  var goBtn       = document.getElementById('goBtn');
+  var openBtn     = document.getElementById('openBtn');
+  var changeBtn   = document.getElementById('changeBtn');
+  var clearBtn    = document.getElementById('clearBtn');
+  var statusMsg   = document.getElementById('statusMsg');
+  var savedStatus = document.getElementById('savedStatusMsg');
+  var savedUrlEl  = document.getElementById('savedUrlDisplay');
 
   /* ── Navigate to GAS app ── */
   function launchApp(url) {
