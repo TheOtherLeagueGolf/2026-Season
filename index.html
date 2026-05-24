@@ -201,7 +201,7 @@ html, body {
   font-family: 'Playfair Display', serif; font-weight: 900; font-size: 32px;
   letter-spacing: -0.5px; color: var(--text); text-align: center; line-height: 1.15;
 }
-.home-title-divider { width: 40px; height: 2px; background: var(--gold); border-radius: 2px; margin: 10px auto 8px; opacity: 0.85; }
+.home-title-divider { width: 100%; height: 2px; background: var(--gold); border-radius: 2px; margin: 10px 0 8px; opacity: 0.85; }
 .home-subtitle { font-size: 13px; color: var(--text-muted); font-weight: 400; letter-spacing: 0.1px; }
 
 .home-nav-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: var(--sp2); }
@@ -321,7 +321,7 @@ html, body {
 
 .scorecard-tbl {
   border-collapse: separate; border-spacing: 0;
-  width: 100%; min-width: 500px; font-size: 12px;
+  width: 100%; min-width: 360px; font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 .scorecard-tbl th, .scorecard-tbl td {
@@ -331,9 +331,9 @@ html, body {
 }
 .scorecard-tbl th:last-child, .scorecard-tbl td:last-child { border-right: none; }
 
-.col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 90px; max-width: 90px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); padding: 0 6px; }
-.col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 48px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
-.col-hole { min-width: 34px; text-align: center; padding: 4px 2px; }
+.col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 68px; max-width: 68px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); padding: 0 4px; overflow: hidden; }
+.col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 34px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
+.col-hole { min-width: 22px; text-align: center; padding: 3px 1px; }
 
 .tbl-header-row th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 0 6px; }
 .tbl-header-row th.col-name { background: var(--card2); text-align: left; }
@@ -349,7 +349,7 @@ html, body {
 .tbl-player-row td { height: 52px; background: var(--card); }
 .tbl-player-row:hover td { background: var(--card3); }
 
-.player-name-cell { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 6px 8px; }
+.player-name-cell { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 4px 4px; overflow: hidden; }
 .player-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .player-meta { font-size: 10px; color: var(--text-dim); line-height: 1.2; margin-top: 1px; }
 
@@ -359,7 +359,7 @@ html, body {
 .badge-abs { background: var(--absent-bg); color: var(--absent-color); border: 1px solid var(--gold-border); }
 
 .score-cell { text-align: center; vertical-align: middle; }
-.sc-gross { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1; position: relative; display: inline-block; }
+.sc-gross { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1; position: relative; display: inline-block; }
 .sc-net { font-size: 10px; font-weight: 600; color: var(--success); line-height: 1; margin-top: 3px; }
 .stroke-mark { color: var(--gold); font-size: 10px; font-weight: 900; vertical-align: super; line-height: 0; position: relative; top: -1px; }
 .absent-row td { background: rgba(246,195,67,0.04) !important; }
@@ -439,13 +439,13 @@ html, body {
 .entry-outer::-webkit-scrollbar-track { background: transparent; }
 .entry-outer::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-.entry-tbl { border-collapse: separate; border-spacing: 0; min-width: 520px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.entry-tbl { border-collapse: separate; border-spacing: 0; min-width: 350px; font-size: 11px; font-variant-numeric: tabular-nums; }
 .entry-tbl th, .entry-tbl td { border-bottom: 1px solid rgba(30,45,74,0.6); border-right: 1px solid rgba(30,45,74,0.4); padding: 0; vertical-align: middle; }
 .entry-tbl th:last-child, .entry-tbl td:last-child { border-right: none; }
 
-.entry-col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 100px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); }
-.entry-col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 44px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
-.entry-col-hole { min-width: 36px; text-align: center; }
+.entry-col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 68px; overflow: hidden; box-shadow: 3px 0 10px rgba(0,0,0,0.4); }
+.entry-col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 34px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
+.entry-col-hole { min-width: 28px; text-align: center; }
 
 .entry-tbl thead th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 0 6px; text-align: center; }
 .entry-tbl thead th.entry-col-name { text-align: left; }
@@ -453,9 +453,9 @@ html, body {
 .entry-tbl .e-par-row td { color: var(--text-muted); }
 .entry-tbl .e-hcp-row td.entry-col-name, .entry-tbl .e-par-row td.entry-col-name { text-align: left; padding-left: 8px; background: var(--card); font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; }
 .entry-tbl .e-hcp-row td.entry-col-tot, .entry-tbl .e-par-row td.entry-col-tot { background: var(--card); }
-.entry-tbl .e-player-row td { background: var(--card); height: 48px; }
+.entry-tbl .e-player-row td { background: var(--card); height: 40px; }
 
-.entry-name-cell { display: flex; flex-direction: column; gap: 6px; padding: 8px; height: 100%; justify-content: center; }
+.entry-name-cell { display: flex; flex-direction: column; gap: 3px; padding: 4px 5px; height: 100%; justify-content: center; overflow: hidden; }
 .entry-player-name { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .absent-toggle-wrap { display: flex; align-items: center; gap: 5px; }
 .absent-toggle-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.3px; }
@@ -466,8 +466,8 @@ html, body {
 .toggle-input:checked + .toggle-track::before { transform: translateX(14px); }
 
 .score-inp {
-  width: 32px; height: 36px; background: var(--card2); border: 1px solid var(--border2);
-  border-radius: 6px; color: var(--text); text-align: center; font-size: 15px;
+  width: 22px; height: 30px; background: var(--card2); border: 1px solid var(--border2);
+  border-radius: 4px; color: var(--text); text-align: center; font-size: 13px;
   font-weight: 700; font-variant-numeric: tabular-nums; font-family: 'Inter', sans-serif;
   display: block; margin: 0 auto; transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -537,22 +537,22 @@ html, body {
 .key-lbl { font-weight: 700; color: #9ad1ff; min-width: 140px; flex-shrink: 0; }
 
 .skins-tbl-wrap { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; margin: 0 var(--sp2) var(--sp2); }
-table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; min-width: 660px; }
+table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; min-width: 365px; }
 .skins-grid th, .skins-grid td { border-bottom: 1px solid var(--border); padding: 0; text-align: center; color: var(--text); vertical-align: middle; }
-.skins-grid col.cGolfer { width: 130px; } .skins-grid col.cInfo { width: 80px; }
-.skins-grid col.cHole { width: 42px; } .skins-grid col.cTotal { width: 52px; }
-.skins-grid thead tr.hRow th { background: #132140; font-size: 12px; padding: 6px 5px; font-weight: 700; color: #9ad1ff; }
-.skins-grid thead tr.pRow th { background: #0f1830; font-size: 12px; padding: 6px 5px; font-weight: 700; color: #9ad1ff; }
-.skins-grid thead tr.lRow th { background: #17295a; font-size: 13px; padding: 8px 5px; font-weight: 900; text-transform: uppercase; letter-spacing: .3px; }
-.hcp-lbl, .par-lbl { text-align: right !important; padding-right: 8px !important; white-space: nowrap !important; }
-.skins-grid th.cGolfer, .skins-grid td.cGolfer { text-align: left; padding-left: 10px; }
-.skins-grid td.cInfo { font-size: 12px; color: #9ad1ff; padding: 4px 6px; }
-.score-pair { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3px 2px; min-height: 38px; }
-.sGross { font-size: 14px; font-weight: 700; line-height: 1.3; }
-.sNet { font-size: 13px; line-height: 1.4; color: var(--success); font-weight: 900; }
-.mk { color: var(--gold); font-size: 10px; vertical-align: super; line-height: 0; font-weight: 900; margin-left: 1px; }
+.skins-grid col.cGolfer { width: 78px; } .skins-grid col.cInfo { width: 58px; }
+.skins-grid col.cHole { width: 22px; } .skins-grid col.cTotal { width: 34px; }
+.skins-grid thead tr.hRow th { background: #132140; font-size: 10px; padding: 4px 2px; font-weight: 700; color: #9ad1ff; }
+.skins-grid thead tr.pRow th { background: #0f1830; font-size: 10px; padding: 4px 2px; font-weight: 700; color: #9ad1ff; }
+.skins-grid thead tr.lRow th { background: #17295a; font-size: 11px; padding: 5px 2px; font-weight: 900; text-transform: uppercase; letter-spacing: .3px; }
+.hcp-lbl, .par-lbl { text-align: right !important; padding-right: 6px !important; white-space: nowrap !important; overflow: hidden; max-width: 68px; }
+.skins-grid th.cGolfer, .skins-grid td.cGolfer { text-align: left; padding-left: 5px; overflow: hidden; }
+.skins-grid td.cInfo { font-size: 10px; color: #9ad1ff; padding: 2px 3px; }
+.score-pair { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2px 1px; min-height: 32px; }
+.sGross { font-size: 11px; font-weight: 700; line-height: 1.3; }
+.sNet { font-size: 10px; line-height: 1.4; color: var(--success); font-weight: 900; }
+.mk { color: var(--gold); font-size: 8px; vertical-align: super; line-height: 0; font-weight: 900; margin-left: 1px; }
 .sNet .mk { color: var(--gold); }
-.sEmpty { opacity: .3; font-size: 13px; }
+.sEmpty { opacity: .3; font-size: 11px; }
 .skins-grid tbody tr.golfer-row:nth-child(odd)  td { background: #0f1a34; }
 .skins-grid tbody tr.golfer-row:nth-child(even) td { background: #13203f; }
 .skins-grid tbody tr.golfer-row td.cGolfer { background: #0d1628; }
@@ -561,7 +561,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 .skins-grid td.push { background: rgba(246,195,67,0.14) !important; }
 .skins-grid td.winner .sNet { color: #fff; }
 .skins-grid td.push .sNet { color: var(--gold); }
-.skins-grid tr.tot-row td { background: #0d1628 !important; font-weight: 900; border-top: 2px solid var(--accent); padding: 9px 5px; font-size: 14px; }
+.skins-grid tr.tot-row td { background: #0d1628 !important; font-weight: 900; border-top: 2px solid var(--accent); padding: 5px 2px; font-size: 11px; }
 .skins-grid tr.tot-row td.cGolfer { color: var(--success); }
 
 .skins-legend { display: flex; gap: var(--sp3); flex-wrap: wrap; align-items: center; margin: 0 var(--sp2) var(--sp3); font-size: 13px; color: var(--text-muted); }
@@ -592,8 +592,6 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
     <div class="bg-layer kb" id="bgB"></div>
     <div class="overlay"></div>
   </div>
-
-  <div class="season-chip" id="home-season-chip">2026</div>
 
   <div class="home-card">
     <div class="home-title-wrap">
@@ -697,6 +695,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
     </div>
   </div>
 
+  <div id="absent-banner-wrap"></div>
   <div class="entry-table-wrap mt2" id="entry-table-wrap">
     <div class="load-msg">Select week and group, then tap Load Group.</div>
   </div>
@@ -861,7 +860,6 @@ if ('serviceWorker' in navigator) {
 gasGet('seasonInfo').then(function(res) {
   if (!res || !res.ok) return;
   if (res.seasonYear) {
-    el('home-season-chip').textContent = res.seasonYear;
     el('home-subtitle').textContent = 'Weekly Golf League · ' + res.seasonYear + ' Season';
   }
   var imgs = Array.isArray(res.homeImageUrls) ? res.homeImageUrls : [];
@@ -1122,7 +1120,7 @@ function renderScorecardTable(G, holes, hcaps, pars) {
     if (r.absent) metaParts.push('<span class="badge badge-abs">ABS</span>');
     if (metaParts.length) html += '<span class="player-meta">' + metaParts.join('&nbsp;') + '</span>';
     html += '</div></td>';
-    html += '<td class="col-hole" style="text-align:center;font-size:11px;color:var(--text-muted);font-weight:600">' + esc(r.handicapIndex||'') + '</td>';
+    html += '<td class="col-hole" style="text-align:center;font-size:9px;color:var(--text-muted);font-weight:600">' + esc(r.handicapIndex||'') + '</td>';
     html += '<td class="col-hole" style="text-align:center;font-size:10px;color:var(--text-dim);font-weight:700">' + esc(r.flight||'') + '</td>';
     html += '<td class="col-hole" style="text-align:center;font-size:10px;color:var(--absent-color)">' + (r.absent ? 'YES' : '') + '</td>';
 
@@ -1316,19 +1314,19 @@ function renderSkins(vm) {
   for (var h = 0; h < H; h++) out += '<col class="cHole">';
   out += '<col class="cTotal"></colgroup>';
 
-  out += '<thead><tr class="hRow"><th class="cGolfer hcp-lbl">Hole Handicap</th><th class="cInfo"></th>';
+  out += '<thead><tr class="hRow"><th class="cGolfer hcp-lbl">Hcp</th><th class="cInfo"></th>';
   for (var h = 0; h < H; h++) out += '<th>' + esc(hcaps[h]||'—') + '</th>';
   out += '<th></th></tr><tr class="pRow"><th class="cGolfer par-lbl">Par</th><th class="cInfo"></th>';
   for (var h = 0; h < H; h++) out += '<th>' + esc(pars[h]||'—') + '</th>';
-  out += '<th></th></tr><tr class="lRow"><th class="cGolfer">Golfer</th><th class="cInfo">Course /<br>Skins Hdcp</th>';
-  for (var h = 0; h < H; h++) { var lbl2 = String(labels[h]||('Hole '+(h+1))).trim(); var hNum = lbl2.match(/\d+/); out += '<th>' + (hNum ? 'Hole '+hNum[0] : esc(lbl2)) + '</th>'; }
+  out += '<th></th></tr><tr class="lRow"><th class="cGolfer">Golfer</th><th class="cInfo">Crs/<br>Ski</th>';
+  for (var h = 0; h < H; h++) { var lbl2 = String(labels[h]||('Hole '+(h+1))).trim(); var hNum = lbl2.match(/\d+/); out += '<th>' + (hNum ? hNum[0] : esc(lbl2)) + '</th>'; }
   out += '<th>Total</th></tr></thead><tbody>';
 
   golfers.forEach(function(gl, gi) {
     var grossTot=0, grossFilled=0, adjTot=0;
     gl.raw.forEach(function(v,h){if(v!==null){grossTot+=v;grossFilled++;adjTot+=gl.adj[h];}});
-    out += '<tr class="golfer-row"><td class="cGolfer"><div style="font-weight:700;font-size:14px">' + esc(gl.name) + '</div></td>';
-    out += '<td class="cInfo"><div style="font-size:11px;color:var(--text-muted)">Course:</div><div style="font-weight:700;font-size:14px">' + esc(gl.ch) + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Skins:</div><div style="font-weight:700;font-size:14px;color:var(--success)">' + esc(gl.sHcp) + '</div></td>';
+    out += '<tr class="golfer-row"><td class="cGolfer"><div style="font-weight:700;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(gl.name) + '</div></td>';
+    out += '<td class="cInfo"><div style="font-size:9px;color:var(--text-muted)">Crs</div><div style="font-weight:700;font-size:11px">' + esc(gl.ch) + '</div><div style="font-size:9px;color:var(--text-muted);margin-top:1px">Ski</div><div style="font-weight:700;font-size:11px;color:var(--success)">' + esc(gl.sHcp) + '</div></td>';
     for (var h = 0; h < H; h++) {
       var rv=gl.raw[h], av=gl.adj[h], stv=gl.st[h];
       var isBest=(holeWinner[h]===gi);
@@ -1437,6 +1435,22 @@ window.loadEntryGroup = function() {
   }).catch(function(err) { el('entry-table-wrap').innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
 };
 
+function updateAbsentBanner() {
+  var banner = el('absent-banner-wrap');
+  if (!banner) return;
+  var golfers = S.entryGroupData ? (S.entryGroupData.golfers||[]) : [];
+  var names = [];
+  for (var i = 0; i < golfers.length; i++) {
+    var cb = el('abs-'+i);
+    if (cb && cb.checked) names.push(golfers[i].name || ('Golfer '+(i+1)));
+  }
+  if (names.length) {
+    banner.innerHTML = '<div class="absent-banner"><div class="absent-banner-text">⚠️ ' + esc(names.join(', ')) + (names.length === 1 ? ' is' : ' are') + ' absent — scores will be projected from course handicap.</div></div>';
+  } else {
+    banner.innerHTML = '';
+  }
+}
+
 function renderEntryTable(res) {
   var golfers = res.golfers||[], holes = res.holeLabels||[], hcaps = res.holeHandicaps||[], pars = res.holePars||[], scores = res.existingScores||[];
   var H = holes.length;
@@ -1492,6 +1506,7 @@ function renderEntryTable(res) {
   el('submit-footer-label').textContent = 'Group ' + S.entryCurrentGroup + ' — ' + weekLabel;
   el('submit-footer').style.display = '';
   updateEntryCheckout();
+  updateAbsentBanner();
 }
 
 window.calcEntryTotal = function(i) {
@@ -1512,12 +1527,14 @@ window.toggleAbsentRow = function(i, absent) {
   for (var h = 0; h < H; h++) {
     var inp = el('inp-'+i+'-h'+h);
     if (!inp) continue;
+    inp.value = '';
     if (absent) { inp.classList.add('absent'); inp.setAttribute('readonly',''); }
     else { inp.classList.remove('absent'); inp.removeAttribute('readonly'); }
   }
   var totEl = el('tot-'+i);
-  if (totEl) { totEl.classList.toggle('e-tot-absent', absent); if (absent) totEl.textContent = '—'; }
+  if (totEl) { totEl.classList.toggle('e-tot-absent', absent); totEl.textContent = '—'; }
   if (!absent) window.calcEntryTotal(i);
+  updateAbsentBanner();
 };
 
 window.onMarkerChange = function() {
