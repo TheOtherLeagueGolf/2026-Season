@@ -334,6 +334,9 @@ html, body {
 .col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 68px; max-width: 68px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); padding: 0 4px; overflow: hidden; }
 .col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 34px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
 .col-hole { min-width: 22px; text-align: center; padding: 3px 1px; }
+.col-team   { min-width: 36px; text-align: center; padding: 3px 2px; }
+.col-netpts { min-width: 46px; text-align: center; padding: 3px 2px; }
+.col-tpts   { min-width: 54px; text-align: center; padding: 3px 2px; }
 
 .tbl-header-row th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 0 6px; }
 .tbl-header-row th.col-name { background: var(--card2); text-align: left; }
@@ -815,7 +818,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '4';
+var APP_VERSION = '5';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1168,23 +1171,37 @@ function renderScorecardTable(G, holes, hcaps, pars) {
   var scoreRows = G.rows || [], strokeTotals = G.strokeTotals || [];
   var ptH = (G.points && G.points.holes) || [];
   var ptT = (G.points && G.points.totals) || [];
-  var colSpan = H + 5;
+  var teamFromU = G.pointsTeamFromU || [];
+  var netFromT  = G.pointsNetFromT  || [];
+  var weekTeam  = G.weekTeamTotals  || {};
+  var colSpan = H + 8; // name + idx + flt + abs + H holes + team + netpts + tpts + tot
+
+  // Determine team names (first two unique values from teamFromU)
+  var t1Name = '', t2Name = '';
+  for (var ti = 0; ti < teamFromU.length; ti++) {
+    var tv = String(teamFromU[ti] || '').trim();
+    if (!tv) continue;
+    if (!t1Name) { t1Name = tv; }
+    else if (tv !== t1Name && !t2Name) { t2Name = tv; break; }
+  }
 
   var html = '<table class="scorecard-tbl"><colgroup>';
   html += '<col class="col-name"><col class="col-hole"><col class="col-hole"><col class="col-hole">';
   for (var h = 0; h < H; h++) html += '<col class="col-hole">';
-  html += '<col class="col-tot"></colgroup><thead>';
+  html += '<col class="col-team"><col class="col-netpts"><col class="col-tpts"><col class="col-tot"></colgroup><thead>';
 
   html += '<tr class="tbl-header-row"><th class="col-name">Golfer</th><th class="col-hole">Idx</th><th class="col-hole">Flt</th><th class="col-hole">Abs</th>';
   for (var h = 0; h < H; h++) { var lbl = String(holes[h]||(h+1)).trim(); var hNum = lbl.match(/\d+/); html += '<th class="col-hole">' + (hNum ? hNum[0] : esc(lbl)) + '</th>'; }
+  html += '<th class="col-team">Team</th><th class="col-netpts">Net<br>Pts</th><th class="col-tpts">Team<br>Pts</th>';
   html += '<th class="col-tot">Total</th></tr></thead><tbody>';
 
   html += '<tr class="tbl-hcp-row"><td class="col-name">Hole Hcp</td><td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
   for (var h = 0; h < H; h++) html += '<td class="col-hole">' + esc(hcaps[h]||'') + '</td>';
-  html += '<td class="col-tot"></td></tr>';
+  html += '<td class="col-team"></td><td class="col-netpts"></td><td class="col-tpts"></td><td class="col-tot"></td></tr>';
 
   html += '<tr class="tbl-par-row"><td class="col-name">Par</td><td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
   for (var h = 0; h < H; h++) html += '<td class="col-hole">' + esc(pars[h]||'') + '</td>';
+  html += '<td class="col-team"></td><td class="col-netpts"></td><td class="col-tpts"></td>';
   html += '<td class="col-tot">' + esc(sumNums(pars)) + '</td></tr>';
 
   html += '<tr class="tbl-section-row"><td colspan="' + colSpan + '">Strokes</td></tr>';
@@ -1197,6 +1214,7 @@ function renderScorecardTable(G, holes, hcaps, pars) {
     var absProj = null;
     if (r.absent && grossFilled === 0) { var absCH = parseInt(String(r.courseHandicap||'').replace(/[^0-9]/g,''), 10); if (isFinite(absCH)) absProj = calcAbsentProjection(absCH, hcaps, pars, strokeTotals[i]||0); }
     var isAbsRow = r.absent && grossFilled === 0;
+    var rTeam = String(teamFromU[i] || '').trim();
 
     html += '<tr class="tbl-player-row' + (isAbsRow ? ' absent-row' : '') + '">';
     html += '<td class="col-name"><div class="player-name-cell"><span class="player-name">' + splitNameHtml(r.name) + '</span>';
@@ -1225,6 +1243,10 @@ function renderScorecardTable(G, holes, hcaps, pars) {
       }
     }
 
+    // Team column (show assignment); Net Pts + Team Pts blank for individual score rows
+    html += '<td class="col-team" style="font-size:10px;font-weight:700;color:var(--text-dim)">' + esc(rTeam) + '</td>';
+    html += '<td class="col-netpts"></td><td class="col-tpts"></td>';
+
     html += '<td class="col-tot">';
     if (absProj) { var abgT = absProj.gross.reduce(function(a,b){return a+b;},0); var abnT = absProj.net.reduce(function(a,b){return a+b;},0); html += '<div class="tot-cell"><div class="tot-gross" style="color:var(--absent-color)">' + esc(abgT) + '</div><div class="tot-net">' + esc(abnT) + '</div></div>'; }
     else if (grossFilled > 0) { html += '<div class="tot-cell"><div class="tot-gross">' + esc(grossTot) + '</div><div class="tot-net">' + esc(adjTot) + '</div></div>'; }
@@ -1238,28 +1260,33 @@ function renderScorecardTable(G, holes, hcaps, pars) {
       html += '<tr class="tbl-pts-row"><td class="col-name">' + splitNameHtml(scoreRows[i].name) + '</td>';
       html += '<td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
       for (var h = 0; h < H; h++) html += '<td class="col-hole">' + esc((ptH[i]&&ptH[i][h])||'') + '</td>';
+      html += '<td class="col-team"></td><td class="col-netpts"></td><td class="col-tpts"></td>';
       html += '<td class="col-tot">' + esc(ptT[i]||'') + '</td></tr>';
+    }
+    // Team summary rows (T6 / T7)
+    if (t1Name) {
+      html += '<tr class="tbl-pts-row tbl-team-row">';
+      html += '<td class="col-name" style="font-weight:700;color:#9ad1ff;letter-spacing:.3px">' + esc(t1Name) + '</td>';
+      html += '<td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
+      for (var h = 0; h < H; h++) html += '<td class="col-hole"></td>';
+      html += '<td class="col-team" style="font-size:10px;font-weight:700;color:#9ad1ff">' + esc(t1Name) + '</td>';
+      html += '<td class="col-netpts" style="font-weight:700;color:var(--success)">' + esc(netFromT[0] !== undefined ? netFromT[0] : '') + '</td>';
+      html += '<td class="col-tpts" style="font-weight:700;color:var(--success)">' + esc(weekTeam.team1Total !== undefined ? weekTeam.team1Total : '—') + '</td>';
+      html += '<td class="col-tot"></td></tr>';
+    }
+    if (t2Name) {
+      html += '<tr class="tbl-pts-row tbl-team-row">';
+      html += '<td class="col-name" style="font-weight:700;color:#9ad1ff;letter-spacing:.3px">' + esc(t2Name) + '</td>';
+      html += '<td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
+      for (var h = 0; h < H; h++) html += '<td class="col-hole"></td>';
+      html += '<td class="col-team" style="font-size:10px;font-weight:700;color:#9ad1ff">' + esc(t2Name) + '</td>';
+      html += '<td class="col-netpts" style="font-weight:700;color:var(--success)">' + esc(netFromT[1] !== undefined ? netFromT[1] : '') + '</td>';
+      html += '<td class="col-tpts" style="font-weight:700;color:var(--success)">' + esc(weekTeam.team2Total !== undefined ? weekTeam.team2Total : '—') + '</td>';
+      html += '<td class="col-tot"></td></tr>';
     }
   }
 
   html += '</tbody></table>';
-
-  /* ── Team weekly summary ── */
-  var teamFromU2 = G.pointsTeamFromU || [];
-  var weekTeam2  = G.weekTeamTotals  || {};
-  var t1Name = '', t2Name = '';
-  for (var ti = 0; ti < teamFromU2.length; ti++) { var tv = String(teamFromU2[ti]||'').trim(); if (tv && ti <= 1 && !t1Name) t1Name = tv; if (tv && ti >= 2 && !t2Name) t2Name = tv; }
-  if (t1Name || t2Name) {
-    html += '<div class="team-summary-row">';
-    if (t1Name) {
-      html += '<div class="team-chip"><span class="team-chip-label">' + esc(t1Name) + '</span><div class="team-chip-divider"></div><div class="team-chip-block"><span class="team-chip-val">' + esc(weekTeam2.team1Total !== undefined ? weekTeam2.team1Total : '—') + '</span><span class="team-chip-lbl">Week Pts</span></div></div>';
-    }
-    if (t2Name) {
-      html += '<div class="team-chip"><span class="team-chip-label">' + esc(t2Name) + '</span><div class="team-chip-divider"></div><div class="team-chip-block"><span class="team-chip-val">' + esc(weekTeam2.team2Total !== undefined ? weekTeam2.team2Total : '—') + '</span><span class="team-chip-lbl">Week Pts</span></div></div>';
-    }
-    html += '</div>';
-  }
-
   html += '<div style="padding:8px 12px;font-size:12px;color:var(--text-dim)"><span style="color:var(--gold);font-weight:900">*</span> 1 stroke &nbsp; <span style="color:var(--gold);font-weight:900">**</span> 2 strokes &nbsp; <span style="opacity:.6">Top = gross · Bottom = net</span></div>';
   return html;
 }
@@ -1526,7 +1553,7 @@ window.onWeekChange = function() {
     return;
   }
 
-  gasGet('viewerWeek', {name: weekName}).then(function(res) {
+  gasGet('week', {name: weekName}).then(function(res) {
     if (!res || !res.ok || !(res.groups || []).length) {
       el('group-picker-area').innerHTML = '<div class="load-error" style="padding:14px 16px">Could not load groups</div>';
       return;
