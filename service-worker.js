@@ -1,11 +1,12 @@
-/* The Other League — Service Worker v1.0
+/* The Other League — Service Worker v1.1
  * Strategy:
  *   - Static shell (fonts, icons, index.html): cache-first
+ *   - version.json: never intercepted — always fetched live for update checks
  *   - GAS API calls (script.google.com): network-first, fall back to cache
  *   - Everything else: network-first
  */
 
-const CACHE_NAME   = 'tol-v4';
+const CACHE_NAME   = 'tol-v5';
 const GAS_ORIGIN   = 'script.google.com';
 const FONT_ORIGIN  = 'fonts.googleapis.com';
 const GSTATIC      = 'fonts.gstatic.com';
@@ -16,6 +17,7 @@ const PRECACHE = [
   './manifest.json',
   './icon-192.svg',
   './icon-512.svg',
+  // version.json intentionally NOT precached — always fetched live
 ];
 
 /* ── Install: precache static shell ── */
@@ -49,6 +51,10 @@ self.addEventListener('fetch', function(e) {
 
   // Skip non-GET and cross-origin that aren't fonts or GAS
   if (e.request.method !== 'GET') return;
+
+  // version.json: never intercept — let browser fetch directly so update
+  // checks always hit the live server regardless of cache state
+  if (url.pathname.endsWith('/version.json')) return;
 
   // Fonts: cache-first (long-lived, never change)
   if (url.hostname === GSTATIC || url.hostname === FONT_ORIGIN) {

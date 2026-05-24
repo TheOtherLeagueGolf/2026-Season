@@ -578,9 +578,35 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 .mt1 { margin-top: var(--sp1); }
 .mt2 { margin-top: var(--sp2); }
 .pb3 { padding-bottom: var(--sp3); }
+
+/* ── UPDATE BANNER ── */
+.update-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(10,17,32,0.97); border-bottom: 2px solid var(--accent);
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.update-banner-msg { font-size: 13px; font-weight: 700; color: var(--success); flex: 1; }
+.update-banner-btn {
+  padding: 5px 14px; background: var(--accent); color: #fff;
+  border: none; border-radius: 8px; font-size: 12px; font-weight: 700;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; white-space: nowrap;
+}
+.update-banner-close {
+  width: 28px; height: 28px; background: transparent; border: none;
+  color: var(--text-dim); font-size: 18px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+}
 </style>
 </head>
 <body>
+
+<div id="update-banner" class="update-banner" style="display:none">
+  <span class="update-banner-msg">⬆ Update available</span>
+  <button class="update-banner-btn" onclick="applyUpdate()">Refresh App</button>
+  <button class="update-banner-close" onclick="dismissUpdate()">✕</button>
+</div>
 
 <!-- ═══════════════════════════════════
      PAGE 1: HOME
@@ -763,6 +789,9 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 /* ── CONFIG ─────────────────────────────────────────── */
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
+/* ── APP VERSION (bump this + version.json on every deploy) ── */
+var APP_VERSION = '1';
+
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
   viewerInit: null,
@@ -857,6 +886,23 @@ if ('serviceWorker' in navigator) {
 /* ════════════════════════════════════════════════════════
    HOME PAGE
    ════════════════════════════════════════════════════════ */
+/* ── VERSION CHECK ──────────────────────────────────────
+   Runs 4 s after load so it doesn't delay initial render.
+   Fetches version.json bypassing all caches; if the server
+   version is ahead of APP_VERSION the update banner shows.
+   ─────────────────────────────────────────────────────── */
+setTimeout(function() {
+  fetch('./version.json?t=' + Date.now(), {cache: 'no-store'})
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data && data.v && String(data.v) !== String(APP_VERSION)) {
+        var banner = el('update-banner');
+        if (banner) banner.style.display = 'flex';
+      }
+    })
+    .catch(function() {}); // offline — silently ignore
+}, 4000);
+
 gasGet('seasonInfo').then(function(res) {
   if (!res || !res.ok) return;
   if (res.seasonYear) {
@@ -1647,6 +1693,20 @@ window.submitScores = function() {
       alert('Error: ' + (res&&res.error||'Unknown error'));
     }
   }).catch(function(err) { btn.textContent = 'Submit Scorecard'; btn.disabled = false; alert('Error: ' + String(err)); });
+};
+
+window.applyUpdate = function() {
+  if ('caches' in window) {
+    caches.keys().then(function(keys) {
+      return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+    }).then(function() { location.reload(); });
+  } else {
+    location.reload();
+  }
+};
+window.dismissUpdate = function() {
+  var b = el('update-banner');
+  if (b) b.style.display = 'none';
 };
 
 window.switchPage = switchPage;
