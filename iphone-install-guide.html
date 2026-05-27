@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Other League — iPhone Install Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #fff;
+    color: #111;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* PAGE LAYOUT */
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    padding: 0.55in 0.65in 0.5in;
+    margin: 0 auto;
+    background: #fff;
+  }
+
+  /* HEADER */
+  .guide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 3px solid #0f7a3a;
+    margin-bottom: 28px;
+  }
+  .guide-header-left { display: flex; align-items: center; gap: 14px; }
+  .guide-logo {
+    width: 52px; height: 52px;
+    background: #0f7a3a;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .guide-title { font-size: 22px; font-weight: 900; color: #111; line-height: 1.1; }
+  .guide-subtitle { font-size: 12px; color: #666; margin-top: 3px; font-weight: 600; }
+  .platform-badge {
+    background: #f0faf4;
+    border: 2px solid #0f7a3a;
+    color: #0f7a3a;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    letter-spacing: 0.3px;
+  }
+
+  /* INTRO */
+  .intro-box {
+    background: #f8fffe;
+    border: 1.5px solid #c3e8d0;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 26px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .intro-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .intro-text { font-size: 13px; color: #333; line-height: 1.55; }
+  .intro-text strong { color: #0f7a3a; }
+  .url-chip {
+    display: inline-block;
+    background: #eaf7ee;
+    border: 1px solid #b0dfc0;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #0a5c2b;
+    letter-spacing: 0.2px;
+    font-family: monospace;
+  }
+
+  /* STEPS GRID */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .step-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .step-num-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .step-num {
+    width: 26px; height: 26px;
+    background: #0f7a3a;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-label {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #111;
+    line-height: 1.25;
+  }
+  .step-desc {
+    font-size: 11px;
+    color: #555;
+    line-height: 1.5;
+    width: 100%;
+    padding-left: 34px;
+    margin-top: -4px;
+    margin-bottom: 4px;
+  }
+  .step-desc em { color: #0f7a3a; font-style: normal; font-weight: 700; }
+
+  /* PHONE MOCKUP */
+  .phone-wrap {
+    width: 130px;
+    flex-shrink: 0;
+  }
+  .phone {
+    width: 130px;
+    height: 232px;
+    background: #1a1a1a;
+    border-radius: 22px;
+    border: 3px solid #333;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  }
+  /* Notch */
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 50px; height: 12px;
+    background: #1a1a1a;
+    border-radius: 0 0 10px 10px;
+    z-index: 10;
+  }
+  .phone-screen {
+    position: absolute;
+    inset: 0;
+    background: #f2f2f7;
+    border-radius: 19px;
+    overflow: hidden;
+  }
+
+  /* Safari browser mockup */
+  .safari-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #f2f2f7;
+  }
+  .safari-bar {
+    background: #fff;
+    padding: 14px 6px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .safari-status { display: flex; justify-content: space-between; align-items: center; padding: 0 2px; }
+  .safari-status-time { font-size: 8px; font-weight: 700; color: #111; }
+  .safari-status-icons { display: flex; gap: 3px; align-items: center; }
+  .safari-status-icons span { font-size: 7px; color: #111; }
+  .safari-url-bar {
+    background: #e5e5ea;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 7.5px;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .safari-url-bar.highlight { background: #0f7a3a; color: #fff; }
+  .safari-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; }
+  .safari-nav span { font-size: 10px; color: #8e8e93; }
+  .safari-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Toolbar at bottom of Safari */
+  .safari-toolbar {
+    background: rgba(255,255,255,0.95);
+    border-top: 1px solid #d1d1d6;
+    padding: 6px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .safari-toolbar span { font-size: 13px; color: #8e8e93; }
+  .safari-toolbar .share-btn { color: #007aff; font-size: 14px; }
+  .share-btn-highlight {
+    background: #007aff;
+    color: #fff !important;
+    border-radius: 6px;
+    padding: 2px 4px;
+    font-size: 14px !important;
+  }
+
+  /* Share Sheet */
+  .share-sheet {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: #f2f2f7;
+    border-radius: 14px 14px 0 0;
+    padding: 8px 0 4px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    z-index: 5;
+  }
+  .share-sheet-handle {
+    width: 36px; height: 4px;
+    background: #c7c7cc;
+    border-radius: 2px;
+    margin: 0 auto 8px;
+  }
+  .share-sheet-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 8px;
+    color: #111;
+    font-weight: 600;
+    background: #fff;
+    margin: 0 8px 1px;
+    border-radius: 8px;
+  }
+  .share-sheet-item.highlighted {
+    background: #0f7a3a;
+    color: #fff;
+  }
+  .share-sheet-item .ss-icon { font-size: 12px; }
+
+  /* Add to Home Screen dialog */
+  .add-dialog {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .add-dialog-inner {
+    background: #fff;
+    border-radius: 14px;
+    width: 110px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .add-dialog-title { font-size: 8.5px; font-weight: 800; color: #111; margin-bottom: 4px; }
+  .add-dialog-icon {
+    width: 32px; height: 32px;
+    background: #0f7a3a;
+    border-radius: 8px;
+    margin: 4px auto 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .add-dialog-name { font-size: 7.5px; color: #555; margin-bottom: 8px; }
+  .add-dialog-btn {
+    background: #007aff;
+    color: #fff;
+    border-radius: 8px;
+    padding: 4px 0;
+    font-size: 8px;
+    font-weight: 700;
+    width: 100%;
+  }
+
+  /* Home screen mockup */
+  .homescreen {
+    background: linear-gradient(160deg, #1a4a8a 0%, #0a2855 100%);
+    height: 100%;
+    padding: 16px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .hs-time { color: #fff; font-size: 18px; font-weight: 200; text-align: center; width: 100%; margin-bottom: 4px; }
+  .hs-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .hs-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .hs-icon-label { font-size: 6px; color: #fff; text-align: center; margin-top: 2px; width: 36px; overflow: hidden; }
+  .hs-app { display: flex; flex-direction: column; align-items: center; }
+  .hs-icon.tol { background: #0f7a3a; box-shadow: 0 0 0 3px rgba(125,255,167,0.5); }
+  .hs-icon.gray { background: #666; }
+  .hs-icon.blue { background: #007aff; }
+  .hs-icon.red { background: #ff3b30; }
+  .hs-icon.orange { background: #ff9500; }
+
+  /* Website content mock */
+  .web-content {
+    padding: 8px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .web-bar { height: 6px; background: #e0e0e0; border-radius: 3px; }
+  .web-bar.w60 { width: 60%; }
+  .web-bar.w80 { width: 80%; }
+  .web-bar.w40 { width: 40%; }
+  .web-hero {
+    background: #050914;
+    border-radius: 8px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .web-hero-title { color: #7dffa7; font-size: 8px; font-weight: 900; }
+  .web-hero-sub { color: rgba(232,238,252,0.6); font-size: 6px; }
+
+  /* FOOTER */
+  .guide-footer {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1.5px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-note { font-size: 10.5px; color: #888; }
+  .footer-note strong { color: #0f7a3a; }
+
+  /* PRINT */
+  @media print {
+    body { background: #fff; }
+    .page { width: 100%; padding: 0.5in 0.6in; }
+    @page { size: letter portrait; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="guide-header">
+    <div class="guide-header-left">
+      <div class="guide-logo">⛳</div>
+      <div>
+        <div class="guide-title">The Other League</div>
+        <div class="guide-subtitle">App Installation Guide</div>
+      </div>
+    </div>
+    <div class="platform-badge">🍎 iPhone / iOS</div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    <div class="intro-icon">ℹ️</div>
+    <div class="intro-text">
+      <strong>Important:</strong> You must use <strong>Safari</strong> to install this app on iPhone — Chrome and other browsers do not support "Add to Home Screen" on iOS.<br>
+      The app URL is: <span class="url-chip">whentrichjr.github.io/The-Other-League-2026-Season</span>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-grid">
+
+    <!-- Step 1 -->
+    <div class="step-card">
+      <div style="width:100%">
+        <div class="step-num-row"><div class="step-num">1</div><div class="step-label">Open Safari</div></div>
+        <div class="step-desc">Find and open the <em>Safari</em> browser app — the blue compass icon on your home screen.</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="homescreen">
+              <div class="hs-time">9:41</div>
+              <div class="hs-row">
+                <div class="hs-app"><div class="hs-icon blue">📋</div><div class="hs-icon-label">Notes</div></div>
+                <div class="hs-app"><div class="hs-icon red">📷</div><div class="hs-icon-label">Camera</div></div>
+                <div class="hs-app"><div class="hs-icon orange">📅</div><div class="hs-icon-label">Calendar</div></div>
+              </div>
+              <div class="hs-row">
+                <div class="hs-app"><div class="hs-icon gray">🗺️</div><div class="hs-icon-label">Maps</div></div>
+                <div class="hs-app" style="position:relative">
+                  <div class="hs-icon" style="background:#1c7cf9;box-shadow:0 0 0 3px rgba(100,180,255,0.6)">🧭</div>
+                  <div class="hs-icon-label" style="color:#7df">Safari</div>
+                  <!-- Tap indicator -->
+                  <div style="position:absolute;inset:-4px;border-radius:13px;border:2px solid #fff;opacity:0.8;pointer-events:none"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+      <div style="width:100%">
+        <div class="step-num-row"><div class="step-num">2</div><div class="step-label">Go to the App URL</div></div>
+        <div class="step-desc">Tap the address bar and type (or paste) the URL, then tap <em>Go</em>.</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="safari-shell">
+              <div class="safari-bar">
+                <div class="safari-status">
+                  <span class="safari-status-time">9:41</span>
+                  <div class="safari-status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+                </div>
+                <div class="safari-url-bar highlight">whentrichjr.github.io/The-Other-League-2026-Season</div>
+                <div class="safari-nav">
+                  <span>‹</span><span>›</span><span></span><span>⊡</span><span>≡</span>
+                </div>
+              </div>
+              <div class="safari-content">
+                <div class="web-content">
+                  <div class="web-hero">
+                    <div class="web-hero-title">⛳ THE OTHER LEAGUE</div>
+                    <div class="web-hero-sub">2026 Season</div>
+                  </div>
+                  <div class="web-bar w80"></div>
+                  <div class="web-bar w60"></div>
+                  <div class="web-bar w40"></div>
+                </div>
+              </div>
+              <div class="safari-toolbar">
+                <span>←</span><span>→</span>
+                <span class="share-btn">⬆</span>
+                <span>⊡</span><span>≡</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+      <div style="width:100%">
+        <div class="step-num-row"><div class="step-num">3</div><div class="step-label">Tap the Share Button</div></div>
+        <div class="step-desc">Tap the <em>Share button</em> — the box with an arrow pointing up — at the bottom center of Safari.</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="safari-shell">
+              <div class="safari-bar">
+                <div class="safari-status">
+                  <span class="safari-status-time">9:41</span>
+                  <div class="safari-status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+                </div>
+                <div class="safari-url-bar">whentrichjr.github.io/The-Other-League-2026-Season</div>
+                <div class="safari-nav">
+                  <span>‹</span><span>›</span><span></span><span>⊡</span><span>≡</span>
+                </div>
+              </div>
+              <div class="safari-content">
+                <div class="web-content">
+                  <div class="web-hero">
+                    <div class="web-hero-title">⛳ THE OTHER LEAGUE</div>
+                    <div class="web-hero-sub">2026 Season</div>
+                  </div>
+                </div>
+              </div>
+              <div class="safari-toolbar">
+                <span>←</span><span>→</span>
+                <span class="share-btn-highlight">⬆</span>
+                <span>⊡</span><span>≡</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+      <div style="width:100%">
+        <div class="step-num-row"><div class="step-num">4</div><div class="step-label">Tap "Add to Home Screen"</div></div>
+        <div class="step-desc">A share sheet will appear from the bottom. Scroll down and tap <em>Add to Home Screen</em>.</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="safari-shell">
+              <div class="safari-bar">
+                <div class="safari-status">
+                  <span class="safari-status-time">9:41</span>
+                  <div class="safari-status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+                </div>
+                <div class="safari-url-bar">whentrichjr.github.io/...</div>
+              </div>
+              <div class="safari-content" style="position:relative; overflow:visible;">
+                <div class="share-sheet" style="position:absolute;bottom:0;left:0;right:0;">
+                  <div class="share-sheet-handle"></div>
+                  <div class="share-sheet-item"><span class="ss-icon">📋</span> Copy Link</div>
+                  <div class="share-sheet-item highlighted"><span class="ss-icon">➕</span> Add to Home Screen</div>
+                  <div class="share-sheet-item"><span class="ss-icon">📖</span> Add to Reading List</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-card">
+      <div style="width:100%">
+        <div class="step-num-row"><div class="step-num">5</div><div class="step-label">Tap "Add"</div></div>
+        <div class="step-desc">A dialog will appear with the app name and icon. Tap <em>Add</em> in the top right to confirm.</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="safari-shell">
+              <div class="safari-bar">
+                <div class="safari-status">
+                  <span class="safari-status-time">9:41</span>
+                  <div class="safari-status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+                </div>
+                <div class="safari-url-bar">Add to Home Screen</div>
+              </div>
+              <div class="safari-content">
+                <div class="add-dialog" style="position:relative;inset:auto;background:none;display:flex;justify-content:center;padding:20px 0;">
+                  <div class="add-dialog-inner" style="box-shadow:0 4px 20px rgba(0,0,0,0.15)">
+                    <div class="add-dialog-title">Add to Home Screen</div>
+                    <div class="add-dialog-icon">⛳</div>
+                    <div class="add-dialog-name">The Other League</div>
+                    <div style="display:flex;justify-content:flex-end">
+                      <div class="add-dialog-btn" style="width:auto;padding:4px 12px">Add</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step-card">
+      <div style="width:100%">
+        <div class="step-num-row"><div class="step-num">6</div><div class="step-label">Open from Home Screen</div></div>
+        <div class="step-desc">The app icon will appear on your home screen. Tap it to open <em>The Other League</em> as a full-screen app!</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="homescreen">
+              <div class="hs-time">9:41</div>
+              <div class="hs-row">
+                <div class="hs-app"><div class="hs-icon blue">📋</div><div class="hs-icon-label">Notes</div></div>
+                <div class="hs-app"><div class="hs-icon red">📷</div><div class="hs-icon-label">Camera</div></div>
+                <div class="hs-app"><div class="hs-icon orange">📅</div><div class="hs-icon-label">Calendar</div></div>
+              </div>
+              <div class="hs-row">
+                <div class="hs-app"><div class="hs-icon gray">🗺️</div><div class="hs-icon-label">Maps</div></div>
+                <div class="hs-app"><div class="hs-icon" style="background:#1c7cf9">🧭</div><div class="hs-icon-label" style="color:#adf">Safari</div></div>
+                <div class="hs-app" style="position:relative">
+                  <div class="hs-icon tol">⛳</div>
+                  <div class="hs-icon-label">Other League</div>
+                  <div style="position:absolute;inset:-5px;border-radius:14px;border:2.5px solid #7dffa7;animation:none;pointer-events:none"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end steps-grid -->
+
+  <!-- FOOTER -->
+  <div class="guide-footer">
+    <div class="footer-note">
+      <strong>Tip:</strong> Once installed, the app works like a native app — full screen, no browser bars. Always opens directly to The Other League.
+    </div>
+    <div class="footer-note" style="color:#aaa">⛳ The Other League · 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
