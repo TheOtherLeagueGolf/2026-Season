@@ -423,22 +423,41 @@ html, body {
 .viewer-content { padding-bottom: var(--sp3); }
 
 /* League table */
-.league-tbl { border-collapse: separate; border-spacing: 0; font-size: 12px; width: 100%; }
-.league-tbl th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 5px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-.league-tbl td { padding: 5px 8px; border-bottom: 1px solid rgba(30,45,74,0.4); color: var(--text-muted); white-space: nowrap; vertical-align: middle; }
+.league-tbl-wrap { overflow-x: auto; padding: var(--sp2); }
+.league-tbl { border-collapse: separate; border-spacing: 0; font-size: 12px; width: 100%; table-layout: auto; }
+.league-tbl th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 6px 9px; border-bottom: 1px solid var(--border); white-space: nowrap; position: sticky; top: 0; z-index: 2; }
+.league-tbl td { padding: 6px 9px; border-bottom: 1px solid rgba(30,45,74,0.4); color: var(--text-muted); white-space: normal; vertical-align: middle; line-height: 1.5; }
 .league-tbl tr:nth-child(even) td { background: rgba(13,22,40,0.5); }
-/* Name cells allow multi-line (partner names on separate lines) */
-.league-tbl td.lt-name { white-space: normal; color: var(--text); font-weight: 700; line-height: 1.65; min-width: 130px; }
-.league-tbl th.lt-name { white-space: normal; }
-/* Rank / team badge cells */
-.league-tbl td.lt-rank { color: var(--text); font-weight: 800; font-size: 13px; }
-.league-tbl td.lt-team { color: var(--success); font-weight: 700; font-size: 11px; }
-/* Number / score cells */
-.league-tbl td.lt-num { color: var(--text-muted); text-align: center; }
-.league-tbl td.lt-total { color: var(--text); font-weight: 700; text-align: center; }
+/* Name cells */
+.league-tbl td.lt-name { color: var(--text); font-weight: 700; line-height: 1.65; min-width: 110px; }
+.league-tbl th.lt-name { white-space: nowrap; }
+/* Rank / team badge cells — compact, no wrap */
+.league-tbl td.lt-rank { color: var(--text); font-weight: 800; font-size: 13px; white-space: nowrap; text-align: center; }
+.league-tbl td.lt-team { color: var(--success); font-weight: 700; font-size: 11px; white-space: nowrap; text-align: center; }
+/* Number / score cells — compact */
+.league-tbl td.lt-num { color: var(--text-muted); text-align: center; white-space: nowrap; }
+.league-tbl td.lt-total { color: var(--text); font-weight: 700; text-align: center; white-space: nowrap; }
+/* Text/label cells — allow full wrapping */
+.league-tbl td.lt-label { color: var(--text); font-weight: 600; white-space: normal; }
 /* Separator between team partners */
 .league-tbl tr.lt-partner-row td { border-bottom: none; padding-bottom: 2px; }
 .league-tbl tr.lt-team-row td { padding-top: 2px; border-bottom: 1px solid rgba(30,45,74,0.5); }
+
+/* League Rules list */
+.league-rules-list { padding: var(--sp2) var(--sp2) var(--sp3); display: flex; flex-direction: column; gap: 8px; }
+.league-section-title { font-size: 13px; font-weight: 900; color: var(--text-dim); text-align: center; padding: 4px 0 6px; letter-spacing: 1px; text-transform: uppercase; }
+.rule-card { display: flex; gap: 13px; align-items: flex-start; background: var(--card2); border-radius: 10px; padding: 12px 14px; border: 1px solid var(--border); }
+.rule-num { min-width: 26px; height: 26px; background: var(--success); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; flex-shrink: 0; margin-top: 2px; }
+.rule-text { font-size: 13px; color: var(--text); line-height: 1.65; flex: 1; }
+
+/* League Roster cards */
+.league-roster-grid { display: flex; flex-direction: column; gap: 8px; padding: var(--sp2); }
+.roster-card { background: var(--card2); border-radius: 10px; border: 1px solid var(--border); padding: 11px 14px; display: flex; align-items: center; gap: 12px; }
+.roster-num { min-width: 24px; text-align: center; font-size: 11px; color: var(--text-dim); font-weight: 700; }
+.roster-name { flex: 1; font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.3; }
+.roster-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+.roster-badge { background: rgba(15,122,58,0.15); border: 1px solid rgba(15,122,58,0.3); color: var(--success); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+.roster-badge.hi { background: rgba(255,255,255,0.06); border-color: var(--border); color: var(--text-muted); }
 
 /* ════════════════════════════════════
    PAGE 3: SCORE ENTRY
@@ -901,7 +920,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '13';
+var APP_VERSION = '14';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1406,9 +1425,130 @@ function loadPlayoffPage(name) {
   }).catch(function(err) { container.innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
 }
 
+/* ── shared cell formatter ── */
+function fmtCell(v) {
+  var s = String(v == null ? '' : v);
+  var safe = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return safe.replace(/\r?\n/g, '<br>');
+}
+
+/* ── League page dispatcher — routes by sheet name ── */
 function renderLeagueTable(res, targetId) {
   var container = el(targetId || 'viewer-league-container');
   if (!container) return;
+  var name = String(res.name || '').toLowerCase();
+  if (name.includes('rules')) { renderLeagueRules(res, container); return; }
+  if (name.includes('roster')) { renderLeagueRoster(res, container); return; }
+  renderLeagueGenericTable(res, container);
+}
+
+/* ── Rules: numbered card list ── */
+function renderLeagueRules(res, container) {
+  var values = res.values || [];
+  if (!values.length) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
+
+  var html = '<div class="league-rules-list">';
+  var ruleCount = 0;
+
+  for (var r = 0; r < values.length; r++) {
+    var row = values[r];
+    // Build a single string from all non-empty cells in the row
+    var cells = row.map(function(c) { return String(c == null ? '' : c).trim(); });
+    var allEmpty = cells.every(function(c) { return !c; });
+    if (allEmpty) continue;
+
+    // Detect a title row: only 1 non-empty cell and it contains no typical rule marker
+    var nonEmpty = cells.filter(function(c) { return c; });
+    if (nonEmpty.length === 1 && !/^\d/.test(nonEmpty[0]) && ruleCount === 0) {
+      html += '<div class="league-section-title">' + esc(nonEmpty[0]) + '</div>';
+      continue;
+    }
+
+    // First cell is the rule number (e.g. "1)" or "1."), rest is the rule text
+    var numRaw = cells[0];
+    var textParts = cells.slice(1).filter(function(c) { return c; });
+    var ruleText = textParts.join(' ');
+
+    // If text is empty, the whole rule might be in cell 0
+    if (!ruleText) {
+      ruleText = numRaw;
+      numRaw = '';
+    }
+    if (!ruleText) continue;
+
+    ruleCount++;
+    // Clean up the number display — strip trailing punctuation
+    var numDisplay = numRaw ? numRaw.replace(/[.):\s]+$/, '').trim() : String(ruleCount);
+
+    html += '<div class="rule-card">';
+    html += '<div class="rule-num">' + esc(numDisplay) + '</div>';
+    html += '<div class="rule-text">' + fmtCell(ruleText) + '</div>';
+    html += '</div>';
+  }
+
+  if (!ruleCount) html += '<div class="load-msg">No rules found</div>';
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+/* ── Roster: name-primary card list ── */
+function renderLeagueRoster(res, container) {
+  var values = res.values || [], frozen = res.frozen || {rows:0, cols:0};
+  if (!values.length) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
+
+  var fr = Math.max(0, Number(frozen.rows || 0));
+  // Grab headers from the last frozen row
+  var headers = fr > 0 ? (values[fr - 1] || []).map(function(h) { return String(h).trim(); }) : [];
+
+  // Find which column is the name
+  var nameCol = -1, teamCol = -1, hiCol = -1;
+  headers.forEach(function(h, i) {
+    var hl = h.toLowerCase();
+    if (nameCol < 0 && hl.includes('name')) nameCol = i;
+    if (teamCol < 0 && hl === 'team') teamCol = i;
+    if (hiCol < 0 && (hl.includes('index') || hl.includes('handicap') || hl === 'hi')) hiCol = i;
+  });
+  // Fallback: if no headers, guess by position
+  if (nameCol < 0) nameCol = 0;
+
+  var html = '<div class="league-roster-grid">';
+  var rowNum = 0;
+
+  for (var r = fr > 0 ? fr : 1; r < values.length; r++) {
+    var row = values[r];
+    var cells = row.map(function(c) { return String(c == null ? '' : c).trim(); });
+    if (cells.every(function(c) { return !c; })) continue;
+
+    rowNum++;
+    var nameVal = cells[nameCol] || '';
+    if (!nameVal) continue;
+
+    html += '<div class="roster-card">';
+    html += '<div class="roster-num">' + rowNum + '</div>';
+    html += '<div style="flex:1"><div class="roster-name">' + fmtCell(nameVal) + '</div>';
+
+    // Badges for team and handicap index
+    var badges = '';
+    if (teamCol >= 0 && cells[teamCol]) badges += '<span class="roster-badge">Team ' + esc(cells[teamCol]) + '</span>';
+    if (hiCol >= 0 && cells[hiCol]) badges += '<span class="roster-badge hi">HI: ' + esc(cells[hiCol]) + '</span>';
+
+    // Any other columns not yet shown
+    headers.forEach(function(h, i) {
+      if (i === nameCol || i === teamCol || i === hiCol) return;
+      if (!cells[i]) return;
+      badges += '<span class="roster-badge hi">' + esc(h ? h + ': ' : '') + esc(cells[i]) + '</span>';
+    });
+
+    if (badges) html += '<div class="roster-meta">' + badges + '</div>';
+    html += '</div></div>';
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+/* ── Generic: smart auto-width table for stats sheets ── */
+function renderLeagueGenericTable(res, container) {
   var values = res.values || [], frozen = res.frozen || {rows:0, cols:0};
   var rows = values.length, cols = rows ? (values[0] ? values[0].length : 0) : 0;
   if (!rows || !cols) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
@@ -1416,16 +1556,14 @@ function renderLeagueTable(res, targetId) {
   var fr = Math.max(0, Number(frozen.rows || 0));
   var fc = Math.max(0, Number(frozen.cols || 0));
 
-  // Detect column type from the last frozen row (actual column headers)
   var hdrRow = fr > 0 ? (values[fr - 1] || []) : (values[0] || []);
   function colType(c) {
     var h = String(hdrRow[c] || '').toLowerCase().trim();
     if (h === 'place' || h === '#' || h === 'rank') return 'rank';
     if (h === 'team') return 'team';
-    if (h.includes('name')) return 'name';
+    if (h.includes('name') || h === 'golfer' || h === 'player') return 'name';
     if (h === 'total' || h === 'tot') return 'total';
     if (h.includes('week') || /^w\s*\d/i.test(h)) return 'week';
-    // Heuristic from position when header is blank
     if (c === 0) return fr > 0 ? 'rank' : 'name';
     if (c === 1 && fc >= 2) return 'team';
     if (c < fc) return 'name';
@@ -1433,35 +1571,32 @@ function renderLeagueTable(res, targetId) {
     return 'week';
   }
 
-  function colWidth(c) {
+  // Column min-widths only — let table-layout:auto fill remaining space
+  function colMinWidth(c) {
     switch (colType(c)) {
-      case 'rank':  return '36px';
-      case 'team':  return '46px';
-      case 'name':  return '145px';
-      case 'total': return '54px';
-      case 'week':  return '46px';
-      default:      return c < 3 ? '80px' : '50px';
+      case 'rank':  return '32px';
+      case 'team':  return '44px';
+      case 'name':  return '110px';
+      case 'total': return '48px';
+      case 'week':  return '42px';
+      default: return '48px';
     }
   }
 
-  // Escape + convert newlines → <br> so partner names split onto separate lines
-  function fmtCell(v) {
-    var s = String(v == null ? '' : v);
-    var safe = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    return safe.replace(/\r?\n/g, '<br>');
+  var html = '<div class="league-tbl-wrap"><table class="league-tbl"><colgroup>';
+  for (var c = 0; c < cols; c++) {
+    html += '<col style="min-width:' + colMinWidth(c) + '">';
   }
-
-  var html = '<div style="overflow-x:auto;padding:var(--sp2)"><table class="league-tbl"><colgroup>';
-  for (var c = 0; c < cols; c++) html += '<col style="width:' + colWidth(c) + ';min-width:' + colWidth(c) + '">';
   html += '</colgroup>';
 
   for (var r = 0; r < rows; r++) {
     var isH = r < Math.max(1, fr);
     html += '<tr>';
     for (var c = 0; c < cols; c++) {
-      var ct   = colType(c);
-      var fmt  = fmtCell(values[r][c]);
-      var align = (ct === 'name' || (c === 0 && ct === 'rank')) ? 'left' : 'center';
+      var ct  = colType(c);
+      var fmt = fmtCell(values[r][c]);
+      var isNum = (ct === 'rank' || ct === 'team' || ct === 'week' || ct === 'total');
+      var align = isNum ? 'center' : 'left';
       if (isH) {
         html += '<th class="lt-' + ct + '" style="text-align:' + align + '">' + fmt + '</th>';
       } else {
