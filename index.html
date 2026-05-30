@@ -422,42 +422,81 @@ html, body {
 #page-viewer { background: var(--bg); }
 .viewer-content { padding-bottom: var(--sp3); }
 
-/* League table */
-.league-tbl-wrap { overflow-x: auto; padding: var(--sp2); }
-.league-tbl { border-collapse: separate; border-spacing: 0; font-size: 12px; width: 100%; table-layout: auto; }
-.league-tbl th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 6px 9px; border-bottom: 1px solid var(--border); white-space: nowrap; position: sticky; top: 0; z-index: 2; }
-.league-tbl td { padding: 6px 9px; border-bottom: 1px solid rgba(30,45,74,0.4); color: var(--text-muted); white-space: normal; vertical-align: middle; line-height: 1.5; }
-.league-tbl tr:nth-child(even) td { background: rgba(13,22,40,0.5); }
-/* Name cells */
-.league-tbl td.lt-name { color: var(--text); font-weight: 700; line-height: 1.65; min-width: 110px; }
-.league-tbl th.lt-name { white-space: nowrap; }
-/* Rank / team badge cells — compact, no wrap */
-.league-tbl td.lt-rank { color: var(--text); font-weight: 800; font-size: 13px; white-space: nowrap; text-align: center; }
-.league-tbl td.lt-team { color: var(--success); font-weight: 700; font-size: 11px; white-space: nowrap; text-align: center; }
-/* Number / score cells — compact */
-.league-tbl td.lt-num { color: var(--text-muted); text-align: center; white-space: nowrap; }
-.league-tbl td.lt-total { color: var(--text); font-weight: 700; text-align: center; white-space: nowrap; }
-/* Text/label cells — allow full wrapping */
-.league-tbl td.lt-label { color: var(--text); font-weight: 600; white-space: normal; }
-/* Separator between team partners */
-.league-tbl tr.lt-partner-row td { border-bottom: none; padding-bottom: 2px; }
-.league-tbl tr.lt-team-row td { padding-top: 2px; border-bottom: 1px solid rgba(30,45,74,0.5); }
+/* ── LEAGUE INFO — full redesign ── */
 
-/* League Rules list */
-.league-rules-list { padding: var(--sp2) var(--sp2) var(--sp3); display: flex; flex-direction: column; gap: 8px; }
-.league-section-title { font-size: 13px; font-weight: 900; color: var(--text-dim); text-align: center; padding: 4px 0 6px; letter-spacing: 1px; text-transform: uppercase; }
-.rule-card { display: flex; gap: 13px; align-items: flex-start; background: var(--card2); border-radius: 10px; padding: 12px 14px; border: 1px solid var(--border); }
-.rule-num { min-width: 26px; height: 26px; background: var(--success); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; flex-shrink: 0; margin-top: 2px; }
+/* Shared */
+.league-page-wrap { padding: var(--sp2) var(--sp2) var(--sp3); }
+
+/* Rules */
+.rules-list { display: flex; flex-direction: column; gap: 5px; }
+.rule-card { display: flex; gap: 12px; align-items: flex-start; background: var(--card2); border-radius: 10px; padding: 11px 13px; border: 1px solid var(--border); }
+.rule-num { min-width: 26px; height: 26px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; flex-shrink: 0; margin-top: 2px; }
 .rule-text { font-size: 13px; color: var(--text); line-height: 1.65; flex: 1; }
+.rule-section-hdr { color: var(--success); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; padding: 12px 0 6px; border-bottom: 1px solid rgba(15,122,58,0.25); margin-top: 4px; }
+.rule-bullet { display: flex; gap: 9px; padding: 5px 0; }
+.rule-bullet-dash { color: var(--success); font-weight: 800; flex-shrink: 0; line-height: 1.65; font-size: 14px; }
+.rule-bullet-text { font-size: 12.5px; color: var(--text); line-height: 1.65; flex: 1; }
+.rule-sub-bullet { display: flex; gap: 9px; padding: 3px 0 3px 18px; }
+.rule-sub-dot { color: var(--success); opacity: 0.7; font-size: 12px; flex-shrink: 0; line-height: 1.65; }
+.rule-sub-text { font-size: 12px; color: var(--text-muted); line-height: 1.6; flex: 1; }
+.rule-para { font-size: 12.5px; color: var(--text-muted); line-height: 1.65; padding: 4px 0 4px 18px; }
 
-/* League Roster cards */
-.league-roster-grid { display: flex; flex-direction: column; gap: 8px; padding: var(--sp2); }
-.roster-card { background: var(--card2); border-radius: 10px; border: 1px solid var(--border); padding: 11px 14px; display: flex; align-items: center; gap: 12px; }
-.roster-num { min-width: 24px; text-align: center; font-size: 11px; color: var(--text-dim); font-weight: 700; }
-.roster-name { flex: 1; font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.3; }
-.roster-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
-.roster-badge { background: rgba(15,122,58,0.15); border: 1px solid rgba(15,122,58,0.3); color: var(--success); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
-.roster-badge.hi { background: rgba(255,255,255,0.06); border-color: var(--border); color: var(--text-muted); }
+/* Roster */
+.roster-list { display: flex; flex-direction: column; gap: 8px; }
+.roster-team-card { background: var(--card2); border-radius: 10px; border: 1px solid var(--border); padding: 12px 14px; }
+.roster-team-badge { display: inline-flex; align-items: center; background: var(--accent); color: #fff; font-size: 11px; font-weight: 900; padding: 3px 11px; border-radius: 20px; margin-bottom: 10px; letter-spacing: 0.3px; }
+.roster-player-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+.roster-player-row:last-child { border-bottom: none; padding-bottom: 0; }
+.roster-player-name { font-size: 14px; font-weight: 700; color: var(--text); flex: 1; }
+.roster-player-email { font-size: 11px; color: var(--success); text-decoration: none; }
+.roster-sub-card { background: var(--card2); border-radius: 10px; border: 1px solid var(--border); padding: 12px 14px; }
+.roster-sub-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px; }
+.roster-sub-item { font-size: 13px; color: var(--text-muted); padding: 4px 0; border-bottom: 1px solid rgba(30,45,74,0.3); }
+.roster-sub-item:last-child { border-bottom: none; }
+
+/* Handicap Index reference */
+.hcp-ref-wrap { display: flex; flex-direction: column; gap: 8px; }
+.hcp-notice { background: rgba(15,122,58,0.1); border: 1px solid rgba(15,122,58,0.3); border-radius: 10px; padding: 11px 13px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.hcp-notice-icon { color: var(--success); font-weight: 800; margin-right: 4px; }
+.hcp-ref-card { background: var(--card2); border-radius: 10px; border: 1px solid var(--border); padding: 12px 14px; }
+.hcp-ref-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--success); margin-bottom: 9px; }
+.hcp-row { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(30,45,74,0.4); align-items: flex-start; }
+.hcp-row:last-child { border-bottom: none; }
+.hcp-row-lbl { font-size: 11px; font-weight: 800; color: var(--text); flex: 0 0 120px; line-height: 1.5; }
+.hcp-row-val { font-size: 11px; color: var(--text-muted); flex: 1; line-height: 1.6; }
+.hcp-para { font-size: 12px; color: var(--text-muted); line-height: 1.6; padding: 4px 0; }
+
+/* Data grids (Weekly Score, Differentials, Points) */
+.league-grid-outer { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: var(--sp1) var(--sp2); }
+.league-grid { border-collapse: separate; border-spacing: 0; font-size: 11.5px; }
+.league-grid th {
+  background: var(--card2); color: var(--text-dim); font-size: 9.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.4px; padding: 5px 7px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid rgba(30,45,74,0.3);
+  white-space: nowrap; position: sticky; top: 0; z-index: 3;
+}
+.league-grid td {
+  padding: 5px 7px; border-bottom: 1px solid rgba(30,45,74,0.35);
+  border-right: 1px solid rgba(30,45,74,0.2);
+  color: var(--text-muted); vertical-align: middle; white-space: nowrap;
+}
+.league-grid tr.lg-team-sep td { border-top: 2px solid rgba(30,45,74,0.8); }
+.lg-fc { position: sticky; z-index: 2; background: var(--card); }
+.league-grid th.lg-fc { z-index: 4; background: var(--card2); }
+.lg-fc-last { border-right: 2px solid var(--border2) !important; }
+.lg-place { font-weight: 900; font-size: 13px; text-align: center; color: var(--text); }
+.lg-rank-1 { color: #f6c343; }
+.lg-rank-2 { color: #b8b8b8; }
+.lg-rank-3 { color: #cd7f32; }
+.lg-team-lbl { color: var(--success); font-size: 10px; font-weight: 800; text-align: center; }
+.lg-name-lbl { color: var(--text); font-weight: 700; font-size: 12px; }
+.lg-info-lbl { color: var(--text-dim); font-size: 10px; text-align: center; }
+.lg-num-cell { text-align: center; }
+.lg-abs-cell { color: #f59e0b; font-weight: 700; text-align: center; }
+.lg-empty-cell { color: var(--text-dim); text-align: center; }
+.lg-total-cell { color: var(--text); font-weight: 800; text-align: center; }
+.lg-course-cell { font-size: 9.5px; color: var(--text-dim); text-align: center; }
 
 /* ════════════════════════════════════
    PAGE 3: SCORE ENTRY
@@ -920,7 +959,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '14';
+var APP_VERSION = '15';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1425,189 +1464,323 @@ function loadPlayoffPage(name) {
   }).catch(function(err) { container.innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
 }
 
-/* ── shared cell formatter ── */
+/* ════════════════════════════════════════════════════════
+   LEAGUE INFO RENDERERS — v14
+   ════════════════════════════════════════════════════════ */
+
 function fmtCell(v) {
   var s = String(v == null ? '' : v);
   var safe = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   return safe.replace(/\r?\n/g, '<br>');
 }
 
-/* ── League page dispatcher — routes by sheet name ── */
+/* Dispatcher — routes by sheet name */
 function renderLeagueTable(res, targetId) {
   var container = el(targetId || 'viewer-league-container');
   if (!container) return;
   var name = String(res.name || '').toLowerCase();
-  if (name.includes('rules')) { renderLeagueRules(res, container); return; }
-  if (name.includes('roster')) { renderLeagueRoster(res, container); return; }
-  renderLeagueGenericTable(res, container);
+  if (name.includes('rules'))    return renderLeagueRules(res, container);
+  if (name.includes('roster'))   return renderLeagueRoster(res, container);
+  if (name.includes('handicap')) return renderLeagueHandicap(res, container);
+  renderLeagueDataGrid(res, container);
 }
 
-/* ── Rules: numbered card list ── */
+/* ── Rules ─────────────────────────────────────────────── */
 function renderLeagueRules(res, container) {
   var values = res.values || [];
   if (!values.length) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
-
-  var html = '<div class="league-rules-list">';
-  var ruleCount = 0;
+  var html = '<div class="league-page-wrap"><div class="rules-list">';
 
   for (var r = 0; r < values.length; r++) {
-    var row = values[r];
-    // Build a single string from all non-empty cells in the row
-    var cells = row.map(function(c) { return String(c == null ? '' : c).trim(); });
-    var allEmpty = cells.every(function(c) { return !c; });
-    if (allEmpty) continue;
+    var cells = values[r].map(function(c) { return String(c == null ? '' : c).trim(); });
+    if (cells.every(function(c) { return !c; })) continue;
 
-    // Detect a title row: only 1 non-empty cell and it contains no typical rule marker
-    var nonEmpty = cells.filter(function(c) { return c; });
-    if (nonEmpty.length === 1 && !/^\d/.test(nonEmpty[0]) && ruleCount === 0) {
-      html += '<div class="league-section-title">' + esc(nonEmpty[0]) + '</div>';
+    var c0 = cells[0] || '';
+    var rest = cells.slice(1).filter(Boolean).join(' ');
+
+    // 1. Numbered rule: col[0] = "1)" or "12)", col[1+] = text
+    if (/^\d+[).]\s*$/.test(c0) && rest) {
+      var num = c0.replace(/[).:\s]+$/, '');
+      html += '<div class="rule-card"><div class="rule-num">' + esc(num) + '</div><div class="rule-text">' + fmtCell(rest) + '</div></div>';
+      continue;
+    }
+    // 1b. Number + text in single cell: "1) League play..."
+    var nm = c0.match(/^(\d+)[).]\s+([\s\S]+)$/);
+    if (nm && !rest) {
+      html += '<div class="rule-card"><div class="rule-num">' + esc(nm[1]) + '</div><div class="rule-text">' + fmtCell(nm[2].trim()) + '</div></div>';
       continue;
     }
 
-    // First cell is the rule number (e.g. "1)" or "1."), rest is the rule text
-    var numRaw = cells[0];
-    var textParts = cells.slice(1).filter(function(c) { return c; });
-    var ruleText = textParts.join(' ');
+    // For content-type detection use full text
+    var full = (rest || c0).trim();
 
-    // If text is empty, the whole rule might be in cell 0
-    if (!ruleText) {
-      ruleText = numRaw;
-      numRaw = '';
+    // 2. Dash bullet: "- text"
+    if (/^-\s/.test(full)) {
+      var bt = full.replace(/^-\s*/, '').trim();
+      html += '<div class="rule-bullet"><span class="rule-bullet-dash">—</span><span class="rule-bullet-text">' + fmtCell(bt) + '</span></div>';
+      continue;
     }
-    if (!ruleText) continue;
-
-    ruleCount++;
-    // Clean up the number display — strip trailing punctuation
-    var numDisplay = numRaw ? numRaw.replace(/[.):\s]+$/, '').trim() : String(ruleCount);
-
-    html += '<div class="rule-card">';
-    html += '<div class="rule-num">' + esc(numDisplay) + '</div>';
-    html += '<div class="rule-text">' + fmtCell(ruleText) + '</div>';
-    html += '</div>';
+    // 3. Dot sub-bullet: "• text"
+    if (/^[•·]\s?/.test(full)) {
+      var st = full.replace(/^[•·]\s*/, '').trim();
+      html += '<div class="rule-sub-bullet"><span class="rule-sub-dot">•</span><span class="rule-sub-text">' + fmtCell(st) + '</span></div>';
+      continue;
+    }
+    // 4. Section header: short line ending with ":"
+    if (/:\s*$/.test(full) && full.length < 80) {
+      html += '<div class="rule-section-hdr">' + esc(full) + '</div>';
+      continue;
+    }
+    // 5. Plain paragraph / sub-text
+    html += '<div class="rule-para">' + fmtCell(full) + '</div>';
   }
 
-  if (!ruleCount) html += '<div class="load-msg">No rules found</div>';
-  html += '</div>';
+  html += '</div></div>';
   container.innerHTML = html;
 }
 
-/* ── Roster: name-primary card list ── */
+/* ── Roster ─────────────────────────────────────────────── */
 function renderLeagueRoster(res, container) {
-  var values = res.values || [], frozen = res.frozen || {rows:0, cols:0};
+  var values = res.values || [];
   if (!values.length) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
 
-  var fr = Math.max(0, Number(frozen.rows || 0));
-  // Grab headers from the last frozen row
-  var headers = fr > 0 ? (values[fr - 1] || []).map(function(h) { return String(h).trim(); }) : [];
-
-  // Find which column is the name
-  var nameCol = -1, teamCol = -1, hiCol = -1;
-  headers.forEach(function(h, i) {
-    var hl = h.toLowerCase();
-    if (nameCol < 0 && hl.includes('name')) nameCol = i;
-    if (teamCol < 0 && hl === 'team') teamCol = i;
-    if (hiCol < 0 && (hl.includes('index') || hl.includes('handicap') || hl === 'hi')) hiCol = i;
-  });
-  // Fallback: if no headers, guess by position
-  if (nameCol < 0) nameCol = 0;
-
-  var html = '<div class="league-roster-grid">';
-  var rowNum = 0;
-
-  for (var r = fr > 0 ? fr : 1; r < values.length; r++) {
-    var row = values[r];
-    var cells = row.map(function(c) { return String(c == null ? '' : c).trim(); });
-    if (cells.every(function(c) { return !c; })) continue;
-
-    rowNum++;
-    var nameVal = cells[nameCol] || '';
-    if (!nameVal) continue;
-
-    html += '<div class="roster-card">';
-    html += '<div class="roster-num">' + rowNum + '</div>';
-    html += '<div style="flex:1"><div class="roster-name">' + fmtCell(nameVal) + '</div>';
-
-    // Badges for team and handicap index
-    var badges = '';
-    if (teamCol >= 0 && cells[teamCol]) badges += '<span class="roster-badge">Team ' + esc(cells[teamCol]) + '</span>';
-    if (hiCol >= 0 && cells[hiCol]) badges += '<span class="roster-badge hi">HI: ' + esc(cells[hiCol]) + '</span>';
-
-    // Any other columns not yet shown
-    headers.forEach(function(h, i) {
-      if (i === nameCol || i === teamCol || i === hiCol) return;
-      if (!cells[i]) return;
-      badges += '<span class="roster-badge hi">' + esc(h ? h + ': ' : '') + esc(cells[i]) + '</span>';
+  // Detect name/email column indices from header row
+  var nameCol = 1, emailCol = 2;
+  for (var i = 0; i < Math.min(values.length, 4); i++) {
+    values[i].forEach(function(h, ci) {
+      var hl = String(h || '').toLowerCase().trim();
+      if (hl === 'name') nameCol = ci;
+      if (hl.includes('email') || hl === 'e-mail') emailCol = ci;
     });
-
-    if (badges) html += '<div class="roster-meta">' + badges + '</div>';
-    html += '</div></div>';
   }
 
-  html += '</div>';
+  var html = '<div class="league-page-wrap"><div class="roster-list">';
+  var curTeam = null, teamPlayers = [], inSub = false;
+
+  function flushTeam() {
+    if (!curTeam) return;
+    html += '<div class="roster-team-card"><div class="roster-team-badge">' + esc(curTeam) + '</div>';
+    teamPlayers.forEach(function(p) {
+      html += '<div class="roster-player-row"><div class="roster-player-name">' + esc(p.name) + '</div>';
+      if (p.email) html += '<a class="roster-player-email" href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>';
+      html += '</div>';
+    });
+    html += '</div>';
+    curTeam = null; teamPlayers = [];
+  }
+
+  for (var r = 0; r < values.length; r++) {
+    var cells = values[r].map(function(c) { return String(c == null ? '' : c).trim(); });
+    if (cells.every(function(c) { return !c; })) continue;
+
+    // Sub List section
+    if (/sub.?list/i.test(cells.join(' ')) && cells.filter(Boolean).length <= 3) {
+      flushTeam();
+      inSub = true;
+      html += '<div class="roster-sub-card"><div class="roster-sub-label">Sub List</div>';
+      continue;
+    }
+    if (inSub) {
+      var sn = cells.filter(Boolean).join(' ');
+      if (sn && !/^sub.?list$/i.test(sn) && !/^name$/i.test(sn)) {
+        html += '<div class="roster-sub-item">' + esc(sn) + '</div>';
+      }
+      continue;
+    }
+
+    // Skip header rows
+    if (/^name$/i.test(cells[nameCol] || '')) continue;
+
+    // New team row: "Team 1:" or "Team 14"
+    if (/^team\s*\d+/i.test(cells[0])) {
+      flushTeam();
+      curTeam = cells[0].replace(/:$/, '').trim();
+      if (cells[nameCol]) teamPlayers.push({ name: cells[nameCol], email: cells[emailCol] || '' });
+      continue;
+    }
+    // 2nd player (continuation row)
+    if (curTeam !== null && cells[nameCol]) {
+      teamPlayers.push({ name: cells[nameCol], email: cells[emailCol] || '' });
+      continue;
+    }
+  }
+  flushTeam();
+  if (inSub) html += '</div>';
+  html += '</div></div>';
   container.innerHTML = html;
 }
 
-/* ── Generic: smart auto-width table for stats sheets ── */
-function renderLeagueGenericTable(res, container) {
-  var values = res.values || [], frozen = res.frozen || {rows:0, cols:0};
-  var rows = values.length, cols = rows ? (values[0] ? values[0].length : 0) : 0;
-  if (!rows || !cols) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
+/* ── Handicap Index (reference content) ─────────────────── */
+function renderLeagueHandicap(res, container) {
+  var values = res.values || [];
+  if (!values.length) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
 
-  var fr = Math.max(0, Number(frozen.rows || 0));
-  var fc = Math.max(0, Number(frozen.cols || 0));
+  // If mostly numeric data, fall through to data grid
+  var numericRows = values.filter(function(row) {
+    return row.filter(function(c) { return /^[\d.]+$/.test(String(c).trim()); }).length > 4;
+  });
+  if (numericRows.length > 5) { renderLeagueDataGrid(res, container); return; }
 
-  var hdrRow = fr > 0 ? (values[fr - 1] || []) : (values[0] || []);
-  function colType(c) {
-    var h = String(hdrRow[c] || '').toLowerCase().trim();
-    if (h === 'place' || h === '#' || h === 'rank') return 'rank';
-    if (h === 'team') return 'team';
-    if (h.includes('name') || h === 'golfer' || h === 'player') return 'name';
-    if (h === 'total' || h === 'tot') return 'total';
-    if (h.includes('week') || /^w\s*\d/i.test(h)) return 'week';
-    if (c === 0) return fr > 0 ? 'rank' : 'name';
-    if (c === 1 && fc >= 2) return 'team';
-    if (c < fc) return 'name';
-    if (c === cols - 1 && fc > 0) return 'total';
-    return 'week';
+  var html = '<div class="league-page-wrap"><div class="hcp-ref-wrap">';
+  var cardTitle = null, cardRows = [];
+
+  function flushCard() {
+    if (cardTitle == null && !cardRows.length) return;
+    html += '<div class="hcp-ref-card">';
+    if (cardTitle) html += '<div class="hcp-ref-title">' + esc(cardTitle) + '</div>';
+    cardRows.forEach(function(row) {
+      if (row.label && row.value) {
+        html += '<div class="hcp-row"><div class="hcp-row-lbl">' + fmtCell(row.label) + '</div><div class="hcp-row-val">' + fmtCell(row.value) + '</div></div>';
+      } else {
+        html += '<div class="hcp-para">' + fmtCell(row.text) + '</div>';
+      }
+    });
+    html += '</div>';
+    cardTitle = null; cardRows = [];
   }
 
-  // Column min-widths only — let table-layout:auto fill remaining space
-  function colMinWidth(c) {
-    switch (colType(c)) {
-      case 'rank':  return '32px';
-      case 'team':  return '44px';
-      case 'name':  return '110px';
-      case 'total': return '48px';
-      case 'week':  return '42px';
-      default: return '48px';
+  for (var r = 0; r < values.length; r++) {
+    var cells = values[r].map(function(c) { return String(c == null ? '' : c).trim(); });
+    var nonEmpty = cells.filter(Boolean);
+    if (!nonEmpty.length) continue;
+    var full = nonEmpty.join(' ');
+
+    // Update/notice box
+    if (/update|as of the \d{4}|as of \d{4}/i.test(full)) {
+      flushCard();
+      html += '<div class="hcp-notice"><span class="hcp-notice-icon">📢</span>' + fmtCell(full) + '</div>';
+      continue;
+    }
+    // Section title
+    if (nonEmpty.length === 1 && cells[0].length < 80 &&
+        (/formulas|definitions|calculate|scoring/i.test(cells[0]) || /:\s*$/.test(cells[0]))) {
+      flushCard();
+      cardTitle = cells[0].replace(/:$/, '').trim();
+      continue;
+    }
+    // Two-column label + value
+    if (cells[0] && nonEmpty.length >= 2) {
+      cardRows.push({ label: cells[0], value: cells.slice(1).filter(Boolean).join(' ') });
+      continue;
+    }
+    cardRows.push({ text: full });
+  }
+  flushCard();
+  html += '</div></div>';
+  container.innerHTML = html;
+}
+
+/* ── Data grids: Weekly Score, Score Differentials, Points ── */
+var LG_FC_WIDTHS = [44, 125, 55, 38]; // sticky col widths: Team/Place, Names, Course, Par
+
+function renderLeagueDataGrid(res, container) {
+  var values = res.values || [], frozen = res.frozen || {rows:1, cols:2};
+  var rows = values.length, cols = rows ? (values[0] || []).length : 0;
+  if (!rows || !cols) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
+
+  var fr = Math.max(1, Number(frozen.rows || 1));
+  var fc = Math.max(0, Number(frozen.cols || 0));
+  var name = String(res.name || '').toLowerCase();
+  var isDiff    = name.includes('differential');
+  var isPoints  = name.includes('points');
+
+  // Score Differentials: skip historical columns, show only current season
+  var seasonStart = isDiff ? cols : 0;
+  if (isDiff) {
+    outerLoop: for (var hr = 0; hr < fr; hr++) {
+      for (var hc = fc; hc < cols; hc++) {
+        var hv = String(values[hr][hc] || '').toLowerCase().trim();
+        if (/^week\s*1$/.test(hv) || /league score/i.test(hv)) { seasonStart = hc; break outerLoop; }
+      }
+    }
+    if (seasonStart === cols) seasonStart = fc; // fallback
+  }
+
+  // Compute sticky left offsets
+  var leftPx = [];
+  var acc = 0;
+  for (var c = 0; c < fc; c++) {
+    leftPx[c] = acc;
+    acc += (LG_FC_WIDTHS[c] !== undefined ? LG_FC_WIDTHS[c] : 80);
+  }
+
+  // Detect column roles
+  var placeCol = isPoints ? 0 : -1;
+  var teamCol  = isPoints ? 1 : 0;
+  var nameCol  = isPoints ? 2 : 1;
+
+  // Find Total column (search header rows for "total")
+  var totalCol = -1;
+  for (var hc2 = cols - 1; hc2 >= fc && totalCol < 0; hc2--) {
+    for (var hr2 = 0; hr2 < fr; hr2++) {
+      if (/^tot/i.test(String(values[hr2][hc2] || '').trim())) { totalCol = hc2; break; }
     }
   }
 
-  var html = '<div class="league-tbl-wrap"><table class="league-tbl"><colgroup>';
+  // Build colgroup
+  var html = '<div class="league-grid-outer"><table class="league-grid"><colgroup>';
   for (var c = 0; c < cols; c++) {
-    html += '<col style="min-width:' + colMinWidth(c) + '">';
+    if (isDiff && c >= fc && c < seasonStart) continue;
+    var w = c < fc ? (LG_FC_WIDTHS[c] || 80) : c === totalCol ? 54 : 46;
+    html += '<col style="width:' + w + 'px">';
   }
   html += '</colgroup>';
 
-  for (var r = 0; r < rows; r++) {
-    var isH = r < Math.max(1, fr);
+  // Header rows
+  html += '<thead>';
+  for (var r = 0; r < fr; r++) {
     html += '<tr>';
     for (var c = 0; c < cols; c++) {
-      var ct  = colType(c);
-      var fmt = fmtCell(values[r][c]);
-      var isNum = (ct === 'rank' || ct === 'team' || ct === 'week' || ct === 'total');
-      var align = isNum ? 'center' : 'left';
-      if (isH) {
-        html += '<th class="lt-' + ct + '" style="text-align:' + align + '">' + fmt + '</th>';
-      } else {
-        var cls = 'lt-' + (ct === 'week' ? 'num' : ct);
-        html += '<td class="' + cls + '" style="text-align:' + align + '">' + fmt + '</td>';
-      }
+      if (isDiff && c >= fc && c < seasonStart) continue;
+      var v  = String(values[r][c] || '');
+      var isFC = c < fc;
+      var isLastFC = isFC && c === fc - 1;
+      var fcCls = isFC ? (' lg-fc' + (isLastFC ? ' lg-fc-last' : '')) : '';
+      var fcSty = isFC ? (' style="left:' + leftPx[c] + 'px"') : '';
+      var extraCls = c === totalCol ? ' lg-total-cell' : '';
+      html += '<th class="' + fcCls + extraCls + '"' + fcSty + '>' + esc(v) + '</th>';
     }
     html += '</tr>';
   }
+  html += '</thead>';
 
-  html += '</table></div>';
+  // Data rows
+  html += '<tbody>';
+  var prevTeamVal = null;
+  for (var r = fr; r < rows; r++) {
+    var row = values[r];
+    var rawTeam = String(row[teamCol] == null ? '' : row[teamCol]).trim();
+    var isNewTeam = rawTeam && rawTeam !== prevTeamVal;
+    if (rawTeam) prevTeamVal = rawTeam;
+    var trCls = (isNewTeam && r > fr) ? ' class="lg-team-sep"' : '';
+    html += '<tr' + trCls + '>';
+    for (var c = 0; c < cols; c++) {
+      if (isDiff && c >= fc && c < seasonStart) continue;
+      var cv   = String(row[c] == null ? '' : row[c]).trim();
+      var cvUp = cv.toUpperCase();
+      var isFC = c < fc;
+      var isLastFC = isFC && c === fc - 1;
+      var fcCls = isFC ? (' lg-fc' + (isLastFC ? ' lg-fc-last' : '')) : '';
+      var fcSty = isFC ? (' style="left:' + leftPx[c] + 'px"') : '';
+
+      var cls = '';
+      if (c === placeCol && /^\d+$/.test(cv)) {
+        var rank = parseInt(cv, 10);
+        cls = ' lg-place' + (rank <= 3 ? ' lg-rank-' + rank : '');
+      } else if (c === teamCol)   { cls = ' lg-team-lbl';
+      } else if (c === nameCol)   { cls = ' lg-name-lbl';
+      } else if (c < fc)          { cls = ' lg-info-lbl';
+      } else if (cvUp === 'ABS')  { cls = ' lg-abs-cell';
+      } else if (!cv)             { cls = ' lg-empty-cell';
+      } else if (c === totalCol)  { cls = ' lg-total-cell';
+      } else if (/^[\d.]+$/.test(cv)) { cls = ' lg-num-cell';
+      } else                      { cls = ' lg-course-cell'; }
+
+      html += '<td class="' + fcCls + cls + '"' + fcSty + '>' + esc(cv) + '</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table></div>';
   container.innerHTML = html;
 }
 
