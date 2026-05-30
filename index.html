@@ -451,7 +451,25 @@ html, body {
 }
 .styled-select:focus { outline: none; border-color: var(--accent); }
 
-.entry-action-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.entry-action-card {
+  margin: 0 16px 12px;
+  padding: 13px 15px;
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.entry-action-status {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1.45;
+}
+.entry-action-status.status-ok { color: var(--success); }
+.entry-action-status.status-locked { color: var(--error); }
+.entry-action-btns { display: flex; gap: 8px; }
 .btn-outlined {
   flex: 1; padding: 9px 12px; border-radius: var(--r);
   border: 1px solid var(--border2); background: transparent; color: var(--text-muted);
@@ -782,16 +800,13 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
         </select>
       </div>
     </div>
-    <div class="entry-action-row">
-      <button class="btn-filled" id="checkout-btn" onclick="checkoutEntry()">Check Out</button>
-      <button class="btn-outlined" id="release-btn" onclick="releaseEntry()" style="display:none">Release</button>
-    </div>
     <div id="entry-chips-area" class="entry-chips">
       <span class="status-chip chip-info"><span class="chip-dot"></span>Select week, then tap a group</span>
     </div>
   </div>
 
   <div id="group-picker-area"></div>
+  <div id="entry-action-area"></div>
   <div id="absent-banner-wrap"></div>
   <div class="entry-table-wrap mt2" id="entry-table-wrap"></div>
 
@@ -874,7 +889,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '11';
+var APP_VERSION = '12';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1612,6 +1627,7 @@ window.onWeekChange = function() {
   el('entry-table-wrap').innerHTML = '';
   el('submit-footer').style.display = 'none';
   el('absent-banner-wrap').innerHTML = '';
+  el('entry-action-area').innerHTML = '';
   el('entry-chips-area').innerHTML = '<span class="status-chip chip-info"><span class="chip-dot"></span>Select a group below</span>';
   updateEntryCheckout();
 
@@ -1669,6 +1685,7 @@ window.selectGroupCard = function(group) {
   el('entry-table-wrap').innerHTML = '<div class="load-msg" style="padding:16px">Loading group ' + group + '…</div>';
   el('submit-footer').style.display = 'none';
   el('absent-banner-wrap').innerHTML = '';
+  el('entry-action-area').innerHTML = '';
   updateEntryCheckout();
 
   gasGet('weekGroup', {sheet: weekName, group: group}).then(function(res) {
@@ -1721,17 +1738,41 @@ function setEntryEditable(editable) {
   }
 }
 
+function renderEntryActionArea() {
+  var area = el('entry-action-area');
+  if (!area) return;
+  if (!S.entryCurrentGroup || !S.entryGroupData) { area.innerHTML = ''; return; }
+
+  var lock = S.entryLock;
+  var name = S.entryMarkerName || (el('entry-marker-select') ? el('entry-marker-select').value : '');
+  var checkedOut  = !!(lock && name && lock.lockedBy === name);
+  var lockedOther = !!(lock && lock.lockedBy && lock.lockedBy !== name);
+
+  var html = '<div class="entry-action-card">';
+  if (checkedOut) {
+    html += '<div class="entry-action-status status-ok">✓ Checked out as <strong>' + esc(name) + '</strong> — enter scores in the scorecard below</div>';
+    html += '<div class="entry-action-btns"><button class="btn-outlined" style="flex:0 0 auto" id="release-btn" onclick="releaseEntry()">Release</button></div>';
+  } else if (lockedOther) {
+    html += '<div class="entry-action-status status-locked">🔒 Group ' + S.entryCurrentGroup + ' is locked by <strong>' + esc(lock.lockedBy) + '</strong> — view only</div>';
+  } else if (!name) {
+    html += '<div class="entry-action-status">Select your name above, then tap <strong>Enter Scores</strong> to begin</div>';
+    html += '<div class="entry-action-btns"><button class="btn-filled" disabled style="opacity:0.45">Enter Scores</button></div>';
+  } else {
+    html += '<div class="entry-action-status">Tap <strong>Enter Scores</strong> to check out Group ' + S.entryCurrentGroup + ' and start entering scores</div>';
+    html += '<div class="entry-action-btns"><button class="btn-filled" id="enter-scores-btn" onclick="checkoutEntry()">Enter Scores</button></div>';
+  }
+  html += '</div>';
+  area.innerHTML = html;
+}
+
 function renderEntryTable(res) {
   var golfers = res.golfers||[], holes = res.holeLabels||[], hcaps = res.holeHandicaps||[], pars = res.holePars||[], scores = res.existingScores||[];
   var strokeTotals = res.strokeTotals || []; // match-play strokes from API (flight differential, not full CH)
   var H = holes.length;
 
-  var lock = S.entryLock;
-  var chipHtml = lock && lock.lockedBy
-    ? '<span class="status-chip chip-warn"><span class="chip-dot"></span>Locked by ' + esc(lock.lockedBy) + '</span>'
-    : '<span class="status-chip chip-ok"><span class="chip-dot"></span>Available</span>';
-  chipHtml += '<span class="status-chip chip-info">Course: ' + esc(res.courseDisplay||'') + '</span>';
-  el('entry-chips-area').innerHTML = chipHtml;
+  if (res.courseDisplay) {
+    el('entry-chips-area').innerHTML = '<span class="status-chip chip-info">Course: ' + esc(res.courseDisplay) + '</span>';
+  }
 
   var html = '<div class="entry-outer"><table class="entry-tbl"><thead><tr>';
   html += '<th class="entry-col-name">Golfer</th>';
@@ -1861,7 +1902,6 @@ window.releaseEntry = function() {
   gasGet('releaseLock', {sheet: S.entryCurrentWeek, group: S.entryCurrentGroup, marker: S.entryMarkerName}).then(function() {
     S.entryLock = null;
     updateEntryCheckout();
-    el('entry-chips-area').innerHTML = '<span class="status-chip chip-info"><span class="chip-dot"></span>Lock released</span>';
   }).catch(function(err) {
     if (btn) { btn.textContent = 'Release'; btn.disabled = false; }
     alert('Error releasing lock: ' + String(err));
@@ -1871,43 +1911,36 @@ window.releaseEntry = function() {
 function updateEntryCheckout() {
   var name = el('entry-marker-select') ? el('entry-marker-select').value : '';
   S.entryMarkerName = name;
-  var btn = el('checkout-btn'), releaseBtn = el('release-btn'), submitBtn = el('btn-submit-scores');
-  if (!btn) return;
   var lock = S.entryLock;
-  var checkedOut = !!(lock && lock.lockedBy === name);
-  if (!name) {
-    btn.textContent = 'Check Out'; btn.disabled = true; btn.style.opacity = '0.5'; btn.style.background = '';
-    if (releaseBtn) releaseBtn.style.display = 'none';
-  } else if (checkedOut) {
-    btn.textContent = '✓ Checked Out'; btn.disabled = true; btn.style.opacity = '1'; btn.style.background = 'var(--accent)';
-    if (releaseBtn) releaseBtn.style.display = '';
-  } else if (lock && lock.lockedBy) {
-    btn.textContent = 'Locked by ' + lock.lockedBy; btn.disabled = true; btn.style.opacity = '0.5'; btn.style.background = '';
-    if (releaseBtn) releaseBtn.style.display = 'none';
-  } else {
-    btn.textContent = 'Check Out'; btn.disabled = !S.entryGroupData; btn.style.opacity = S.entryGroupData ? '1' : '0.5'; btn.style.background = '';
-    if (releaseBtn) releaseBtn.style.display = 'none';
-  }
+  var checkedOut = !!(lock && name && lock.lockedBy === name);
+  var submitBtn = el('btn-submit-scores');
   if (submitBtn) submitBtn.disabled = !checkedOut;
   setEntryEditable(checkedOut);
+  renderEntryActionArea();
 }
 
 window.checkoutEntry = function() {
   var name = S.entryMarkerName;
   if (!name || !S.entryCurrentWeek || !S.entryCurrentGroup) return;
-  var btn = el('checkout-btn');
-  btn.textContent = 'Checking out…'; btn.disabled = true;
+  var btn = el('enter-scores-btn');
+  if (btn) { btn.textContent = 'Checking out…'; btn.disabled = true; }
   gasGet('acquireLock', {sheet: S.entryCurrentWeek, group: S.entryCurrentGroup, marker: name}).then(function(res) {
     if (!res || !res.ok) {
-      btn.disabled = false;
+      if (btn) { btn.textContent = 'Enter Scores'; btn.disabled = false; }
       alert('Could not check out: ' + (res&&res.error||'Unknown error'));
       updateEntryCheckout();
       return;
     }
     S.entryLock = res.lock;
     updateEntryCheckout();
-    el('entry-chips-area').innerHTML = '<span class="status-chip chip-ok"><span class="chip-dot"></span>Checked out as ' + esc(name) + '</span>';
-  }).catch(function(err) { btn.disabled = false; updateEntryCheckout(); alert('Error: ' + String(err)); });
+    // Scroll scorecard into view after checkout
+    var tw = el('entry-table-wrap');
+    if (tw) setTimeout(function() { tw.scrollIntoView({behavior:'smooth', block:'start'}); }, 80);
+  }).catch(function(err) {
+    if (btn) { btn.textContent = 'Enter Scores'; btn.disabled = false; }
+    updateEntryCheckout();
+    alert('Error: ' + String(err));
+  });
 };
 
 window.submitScores = function() {
