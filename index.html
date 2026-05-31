@@ -975,7 +975,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '19';
+var APP_VERSION = '20';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1984,6 +1984,22 @@ function renderLeagueDataGrid(res, container) {
       continue;
     }
 
+    // isPoints: split combined name into two separate visual rows
+    var p2NameVal = null, p1NameVal = null;
+    if (isPoints) {
+      var pnRaw = String(row[nameCol] == null ? '' : row[nameCol]).trim();
+      var pnParts;
+      if (pnRaw.indexOf('\n') > -1) {
+        pnParts = pnRaw.split('\n').map(function(x) { return x.trim(); }).filter(Boolean);
+      } else {
+        var pnW = pnRaw.split(' ');
+        pnParts = (pnW.length >= 4)
+          ? [pnW.slice(0, Math.floor(pnW.length / 2)).join(' '), pnW.slice(Math.floor(pnW.length / 2)).join(' ')]
+          : [pnRaw];
+      }
+      if (pnParts.length >= 2) { p1NameVal = pnParts[0]; p2NameVal = pnParts[1]; }
+    }
+
     var rawTeam = String(row[teamCol] == null ? '' : row[teamCol]).trim();
     var isNewTeam = rawTeam && rawTeam !== prevTeamVal;
     if (rawTeam) prevTeamVal = rawTeam;
@@ -2022,16 +2038,8 @@ function renderLeagueDataGrid(res, container) {
         var si = cv.indexOf(' ');
         cellContent = esc(cv.slice(0, si)) + '<br><span style="opacity:0.7;font-size:10px">' + esc(cv.slice(si + 1)) + '</span>';
       } else if (c === nameCol && isPoints) {
-        if (cv.indexOf('\n') > -1) {
-          // Cell has an actual line break (Alt+Enter in Sheets) — use it directly
-          cellContent = cv.split('\n').map(function(p) { return esc(p.trim()); }).join('<br>');
-        } else if (cv.indexOf(' ') > -1) {
-          var words = cv.split(' ');
-          if (words.length >= 4) {
-            var mid = Math.floor(words.length / 2);
-            cellContent = esc(words.slice(0, mid).join(' ')) + '<br>' + esc(words.slice(mid).join(' '));
-          } else { cellContent = esc(cv); }
-        } else { cellContent = esc(cv); }
+        // Use player 1 name only — player 2 gets its own row below
+        cellContent = p1NameVal ? esc(p1NameVal) : esc(cv);
       } else {
         cellContent = esc(cv);
       }
@@ -2039,6 +2047,22 @@ function renderLeagueDataGrid(res, container) {
       html += '<td class="' + (fcCls + tdCls).trim() + '"' + tdSty + '>' + cellContent + '</td>';
     }
     html += '</tr>';
+    // Row 2: second player name on its own row, matching Score Differentials/Weekly Score layout
+    if (p2NameVal) {
+      html += '<tr>';
+      for (var rr = 0; rr < cols; rr++) {
+        if (isDiff && rr >= fc && rr < seasonStart) continue;
+        if (rr === nameCol) {
+          var rrSp = ['left:' + leftPx[rr] + 'px', 'white-space:normal'];
+          html += '<td class="lg-fc' + (rr === fc - 1 ? ' lg-fc-last' : '') + ' lg-name-lbl" style="' + rrSp.join(';') + '">' + esc(p2NameVal) + '</td>';
+        } else if (rr < fc) {
+          html += '<td class="lg-fc' + (rr === fc - 1 ? ' lg-fc-last' : '') + ' lg-empty-cell" style="left:' + leftPx[rr] + 'px"></td>';
+        } else {
+          html += '<td class="lg-empty-cell"></td>';
+        }
+      }
+      html += '</tr>';
+    }
   }
   html += '</tbody></table></div>';
   container.innerHTML = html;
