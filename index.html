@@ -975,7 +975,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '22';
+var APP_VERSION = '23';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1325,7 +1325,7 @@ function renderViewerWeek(vm) {
       if (pairNames.length) pairLines.push(pairNames.map(esc).join(' * '));
     }
     var namesHtml = pairLines.join('<br>');
-    groupsHtml += '<div class="group-accordion' + (gi === 0 ? ' open' : '') + '">';
+    groupsHtml += '<div class="group-accordion">';
     groupsHtml += '<div class="group-toggle" onclick="toggleAccordion(this)">';
     groupsHtml += '<span class="group-name">Group ' + esc(G.group) + '</span>';
     groupsHtml += '<span class="group-members">' + namesHtml + '</span>';
