@@ -483,9 +483,9 @@ html, body {
   background: var(--card);
 }
 .league-grid tr.lg-team-sep td { border-top: 2px solid rgba(30,45,74,0.8); }
-.lg-fc { position: sticky; z-index: 2; background: var(--card); }
-.league-grid th.lg-fc { z-index: 4; background: var(--card2); }
-.lg-fc-last { border-right: 2px solid var(--border2) !important; }
+.lg-fc { background: var(--card); }
+.league-grid th.lg-fc { background: var(--card2); }
+.lg-fc-last { border-right: 1px solid rgba(30,45,74,0.2); }
 .lg-place { font-weight: 900; font-size: 13px; text-align: center; color: var(--text); }
 .lg-rank-1 { color: #f6c343; }
 .lg-rank-2 { color: #b8b8b8; }
@@ -975,7 +975,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '20';
+var APP_VERSION = '21';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
