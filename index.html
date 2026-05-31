@@ -480,6 +480,7 @@ html, body {
   padding: 5px 7px; border-bottom: 1px solid rgba(30,45,74,0.35);
   border-right: 1px solid rgba(30,45,74,0.2);
   color: var(--text-muted); vertical-align: middle; white-space: nowrap;
+  background: var(--card);
 }
 .league-grid tr.lg-team-sep td { border-top: 2px solid rgba(30,45,74,0.8); }
 .lg-fc { position: sticky; z-index: 2; background: var(--card); }
@@ -974,7 +975,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '18';
+var APP_VERSION = '19';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1951,6 +1952,38 @@ function renderLeagueDataGrid(res, container) {
   var prevTeamVal = null;
   for (var r = fr; r < rows; r++) {
     var row = values[r] || [];
+
+    // Detect descriptor/formula row: exactly one non-empty data cell with long text
+    // (handles case where GAS puts formula row in data section, not header section)
+    var descCells = [];
+    for (var dc = fc; dc < cols; dc++) {
+      if (isDiff && dc >= fc && dc < seasonStart) continue;
+      if (dc === totalCol) continue;
+      var dcV = String(row[dc] == null ? '' : row[dc]).trim();
+      if (dcV) descCells.push({col: dc, val: dcV});
+    }
+    if (descCells.length === 1 && descCells[0].val.length > 20) {
+      html += '<tr>';
+      for (var dc2 = 0; dc2 < fc; dc2++) {
+        var dcV2  = String(row[dc2] == null ? '' : row[dc2]).trim();
+        var dcLFC = dc2 === fc - 1;
+        var dcSp  = ['left:' + leftPx[dc2] + 'px'];
+        if (dc2 === courseCol) dcSp.push('white-space:normal', 'text-align:center');
+        var dcCls = ' lg-fc' + (dcLFC ? ' lg-fc-last' : '');
+        if      (dc2 === teamCol) dcCls += ' lg-team-lbl';
+        else if (dc2 === nameCol) dcCls += ' lg-name-lbl';
+        else                      dcCls += ' lg-info-lbl';
+        html += '<td class="' + dcCls.trim() + '" style="' + dcSp.join(';') + '">' + esc(dcV2) + '</td>';
+      }
+      var dSpan = visibleCols - fc - (totalCol >= 0 ? 1 : 0);
+      html += '<td colspan="' + dSpan + '" class="lg-title-hdr" style="text-align:left;font-style:italic;font-size:10px;font-weight:500">' + esc(descCells[0].val) + '</td>';
+      if (totalCol >= 0) {
+        html += '<td class="lg-total-cell">' + esc(String(row[totalCol] == null ? '' : row[totalCol]).trim()) + '</td>';
+      }
+      html += '</tr>';
+      continue;
+    }
+
     var rawTeam = String(row[teamCol] == null ? '' : row[teamCol]).trim();
     var isNewTeam = rawTeam && rawTeam !== prevTeamVal;
     if (rawTeam) prevTeamVal = rawTeam;
