@@ -602,6 +602,7 @@ html, body {
 }
 .group-card.selected .group-card-badge { background: var(--accent); color: #fff; border-color: var(--accent); }
 .group-card-names { font-size: 12px; color: var(--text-muted); line-height: 1.6; flex: 1; min-width: 0; }
+.group-submitted-badge { font-size: 10px; font-weight: 700; color: var(--success); background: rgba(15,122,58,0.12); border: 1px solid rgba(15,122,58,0.28); border-radius: 6px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0; }
 
 .entry-table-wrap { padding: var(--sp2); padding-top: 0; }
 .entry-outer { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
@@ -975,7 +976,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '23';
+var APP_VERSION = '24';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -2329,9 +2330,14 @@ function renderGroupPicker(weekName, groups) {
     var G = groups[i];
     var gNum = G.group || (i + 1);
     var names = (G.rows || []).map(function(r) { return r.name || ''; }).filter(Boolean).join(' · ');
+    // Detect if any golfer in this group has scores already on the sheet
+    var hasScores = (G.rows||[]).some(function(r) {
+      return (r.scores||[]).some(function(s) { var v = parseInt(String(s),10); return isFinite(v) && v > 0; });
+    });
     html += '<div class="group-card" id="gc-' + gNum + '" onclick="selectGroupCard(' + gNum + ')">';
     html += '<span class="group-card-badge">Group ' + gNum + '</span>';
     html += '<span class="group-card-names">' + esc(names) + '</span>';
+    if (hasScores) html += '<span class="group-submitted-badge">✓ Scores In</span>';
     html += '</div>';
   }
   html += '</div>';
@@ -2643,7 +2649,7 @@ window.submitScores = function() {
     golfers: S.entryGolfers,
     scores: scores,
     absentFlags: absentFlags,
-    overwrite: false
+    overwrite: true   // always allow corrections to already-submitted scores
   };
 
   var btn = el('btn-submit-scores');
@@ -2653,10 +2659,23 @@ window.submitScores = function() {
     if (res && res.ok) {
       btn.textContent = 'Submitted! ✓'; btn.style.background = '#0d6532';
       S.entryLock = null;
-      updateEntryCheckout();
       delete S.viewerWeekData[S.entryCurrentWeek];
       delete S.skinsData[S.entryCurrentWeek];
-      setTimeout(function() { btn.textContent = 'Submit Scorecard'; btn.style.background = ''; }, 3000);
+      // Mark this group card as submitted immediately (no need to wait for re-fetch)
+      var submittedCard = el('gc-' + S.entryCurrentGroup);
+      if (submittedCard && !submittedCard.querySelector('.group-submitted-badge')) {
+        var badge = document.createElement('span');
+        badge.className = 'group-submitted-badge';
+        badge.textContent = '✓ Scores In';
+        submittedCard.appendChild(badge);
+      }
+      // Re-fetch the group after a short delay to show the confirmed server state
+      // and reset the checkout so corrections can be made if needed
+      var savedGroup = S.entryCurrentGroup;
+      setTimeout(function() {
+        btn.textContent = 'Submit Scorecard'; btn.style.background = '';
+        selectGroupCard(savedGroup);
+      }, 2000);
     } else {
       btn.textContent = 'Submit Scorecard'; btn.disabled = false;
       alert('Error: ' + (res&&res.error||'Unknown error'));
