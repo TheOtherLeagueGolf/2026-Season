@@ -976,7 +976,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '24';
+var APP_VERSION = '25';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -2491,13 +2491,13 @@ function renderEntryTable(res) {
       if (isAbsent) {
         var projVal = absProjEntry ? String(absProjEntry.gross[h]) : '';
         html += '<td class="entry-col-hole"><div class="entry-hole-wrap">' + smHtml;
-        html += '<input type="number" min="1" max="12" class="score-inp absent" value="' + projVal + '" id="inp-'+i+'-h'+h+'" readonly></div></td>';
+        html += '<input type="number" min="1" max="9" class="score-inp absent" value="' + projVal + '" id="inp-'+i+'-h'+h+'" readonly></div></td>';
       } else {
         var existing = gScores[h] || '';
         var numVal = parseInt(String(existing), 10);
         var valStr = (isFinite(numVal) && numVal > 0) ? String(numVal) : '';
         html += '<td class="entry-col-hole"><div class="entry-hole-wrap">' + smHtml;
-        html += '<input type="number" min="1" max="12" class="score-inp" value="' + valStr + '" id="inp-'+i+'-h'+h+'" oninput="calcEntryTotal('+i+')"></div></td>';
+        html += '<input type="number" min="1" max="9" class="score-inp" value="' + valStr + '" id="inp-'+i+'-h'+h+'" oninput="calcEntryTotal('+i+')"></div></td>';
       }
     }
     html += '<td class="entry-col-tot"><div class="e-tot-cell'+(isAbsent?' e-tot-absent':'')+'" id="tot-'+i+'">'+(initTot>0?initTot:'—')+'</div></td>';
@@ -2634,13 +2634,13 @@ window.submitScores = function() {
     for (var h = 0; h < H; h++) {
       var inp = el('inp-'+i+'-h'+h);
       var v = inp ? parseInt(inp.value, 10) : 0;
-      if (!absent && (!isFinite(v) || v < 1 || v > 12)) allReady = false;
+      if (!absent && (!isFinite(v) || v < 1 || v > 9)) allReady = false;
       row.push(absent ? 1 : (isFinite(v) && v > 0 ? v : 1));
     }
     scores.push(row);
   }
 
-  if (!allReady) { alert('Some scores are missing or out of range (1-12). Please fill in all scores.'); return; }
+  if (!allReady) { alert('Some scores are missing or out of range (1-9). Please fill in all scores.'); return; }
 
   var payload = {
     sheetName: S.entryCurrentWeek,
