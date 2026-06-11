@@ -976,7 +976,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '25';
+var APP_VERSION = '28';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1059,6 +1059,7 @@ function switchPage(pageName) {
   if (pageName === 'viewer' && !S.viewerBuilt) initViewer();
   else if (pageName === 'skins' && !S.skinsBuilt) initSkins();
   else if (pageName === 'entry' && !S.entryBuilt) initEntry();
+  else if (pageName === 'entry' && S.entryBuilt) refreshGroupPickerSilent();
 }
 
 /* ── BOOT ────────────────────────────────────────────── */
@@ -2343,6 +2344,31 @@ function renderGroupPicker(weekName, groups) {
   html += '</div>';
   el('group-picker-area').innerHTML = html;
 }
+
+// Silently refresh group picker badges without disrupting active entry
+function refreshGroupPickerSilent() {
+  var weekName = S.entryCurrentWeek;
+  if (!weekName) return;
+  // Never refresh while a user has the group checked out — don't interrupt entry
+  if (S.entryLock && S.entryMarkerName && S.entryLock.lockedBy === S.entryMarkerName) return;
+  delete S.viewerWeekData[weekName];
+  gasGet('week', {name: weekName}).then(function(res) {
+    if (!res || !res.ok || !(res.groups || []).length) return;
+    S.viewerWeekData[weekName] = res;
+    var selectedGroup = S.entryCurrentGroup;
+    renderGroupPicker(weekName, res.groups);
+    if (selectedGroup) {
+      var card = el('gc-' + selectedGroup);
+      if (card) card.classList.add('selected');
+    }
+  }).catch(function() {});
+}
+
+// Poll every 45 seconds while on the Cards tab (not checked out)
+setInterval(function() {
+  var entryPage = el('page-entry');
+  if (entryPage && entryPage.classList.contains('active')) refreshGroupPickerSilent();
+}, 45000);
 
 window.selectGroupCard = function(group) {
   // Highlight selected card
