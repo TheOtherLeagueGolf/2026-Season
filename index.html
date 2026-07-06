@@ -976,7 +976,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '28';
+var APP_VERSION = '30';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -2752,6 +2752,40 @@ function attachTripleTap(titleId, panelId) {
 }
 attachTripleTap('viewer-title', 'viewer-admin-panel');
 attachTripleTap('skins-title',  'skins-admin-panel');
+
+/* ── Score entry: auto-advance to next cell ── */
+// Traverses column-first (all players for hole N, then hole N+1) to match
+// on-course entry flow where the group records each hole together.
+window.autoAdvanceScore = function(playerIdx, holeIdx) {
+  var golfers = S.entryGroupData ? (S.entryGroupData.golfers||[]) : [];
+  var H = S.entryGroupData ? (S.entryGroupData.holeLabels||[]).length : 9;
+  // Next hole for the same player (holes 1-9 across the row)
+  for (var nh = holeIdx + 1; nh < H; nh++) {
+    var nh_inp = el('inp-'+playerIdx+'-h'+nh);
+    if (nh_inp && !nh_inp.classList.contains('absent') && !nh_inp.hasAttribute('readonly')) {
+      nh_inp.focus(); nh_inp.select(); return;
+    }
+  }
+  // Row complete — move to first available hole of the next player
+  for (var ni = playerIdx + 1; ni < golfers.length; ni++) {
+    for (var ph = 0; ph < H; ph++) {
+      var ni_inp = el('inp-'+ni+'-h'+ph);
+      if (ni_inp && !ni_inp.classList.contains('absent') && !ni_inp.hasAttribute('readonly')) {
+        ni_inp.focus(); ni_inp.select(); return;
+      }
+    }
+  }
+};
+
+// Event delegation on the permanent container — survives table re-renders
+el('entry-table-wrap').addEventListener('input', function(e) {
+  var inp = e.target;
+  if (!inp.classList.contains('score-inp') || inp.classList.contains('absent') || inp.hasAttribute('readonly')) return;
+  var match = (inp.id||'').match(/^inp-(\d+)-h(\d+)$/);
+  if (!match) return;
+  var v = parseInt(inp.value, 10);
+  if (isFinite(v) && v >= 1 && v <= 9) autoAdvanceScore(parseInt(match[1],10), parseInt(match[2],10));
+});
 
 /* ── Viewer admin ── */
 window.adminViewerRefresh = function() {
